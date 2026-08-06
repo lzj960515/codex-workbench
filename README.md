@@ -27,13 +27,35 @@ python3 scripts/install.py
 
 也可以直接把仓库地址交给 AI，让它阅读本文件并完成安装和合并。
 
-## 收录的 Skills
+## Skills 清单
 
-- 工程协作：`architecture-design-review`、`receiving-code-review`、`systematic-debugging`、`test-driven-development`、`verification-before-completion`。
-- 知识与提示词：`skill-builder`、`source-repo-study`、`wiki-maintainer`。
-- 图形与设计：`drawio`、`mindmap`、`design-extractor`。
+| Skill | 用途 |
+| --- | --- |
+| [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
+| [`receiving-code-review`](skills/receiving-code-review/) | 评估代码审查意见，并依据代码和业务证据决定如何处理。 |
+| [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
+| [`test-driven-development`](skills/test-driven-development/) | 用失败测试保护功能实现、Bug 修复和行为重构。 |
+| [`verification-before-completion`](skills/verification-before-completion/) | 在完成、提交、推送或发布前建立与声明相匹配的验证证据。 |
+| [`skill-builder`](skills/skill-builder/) | 从真实需求设计 Skill 的职责、边界和验收标准。 |
+| [`source-repo-study`](skills/source-repo-study/) | 系统研究源码仓库，并整理成架构、功能和数据流 Wiki。 |
+| [`wiki-maintainer`](skills/wiki-maintainer/) | 持续摄取和修订 Markdown Wiki，维护索引、链接和知识一致性。 |
+| [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
+| [`mindmap`](skills/mindmap/) | 将想法、文档和讨论整理成可编辑的 draw.io 思维导图。 |
+| [`design-extractor`](skills/design-extractor/) | 从网站提取品牌视觉语言并生成标准 `DESIGN.md`。 |
 
 `drawio` 和 `mindmap` 需要安装 draw.io Desktop，并让 `drawio` 命令可以从终端调用。
+
+## Hooks 清单
+
+当前仓库收录一套 [`task-handoff`](hooks/task-handoff/) Hook，用于在长任务中保存和恢复工作上下文。
+
+| Hook 事件 | 触发时机 | 用途 |
+| --- | --- | --- |
+| `UserPromptSubmit` | 用户提交新消息后 | 上下文使用率达到 70% 时，提醒为当前用户任务创建或更新状态文件。 |
+| `PostToolUse` | AI 每次调用工具后 | AI 连续工作期间达到 70% 时及时提醒，不依赖用户再次发送消息。 |
+| `SessionStart`（`compact`） | 上下文压缩完成后 | 提醒先读取任务状态文件，再结合 Git 状态和差异恢复工作。 |
+
+同一个用户任务只提醒一次；并行工具回调会合并为一次提醒，下一条用户消息开始新的提醒周期。
 
 ## 第三方内容
 
