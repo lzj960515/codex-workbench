@@ -1,0 +1,42 @@
+{
+  "description": "Codex context handoff reminders.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^compact$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "__TASK_HANDOFF_COMMAND__",
+            "timeout": 3,
+            "additionalContextLimit": 200
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "__TASK_HANDOFF_COMMAND__",
+            "timeout": 3,
+            "additionalContextLimit": 200
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "__TASK_HANDOFF_COMMAND__",
+            "timeout": 3,
+            "additionalContextLimit": 200
+          }
+        ]
+      }
+    ]
+  }
+}

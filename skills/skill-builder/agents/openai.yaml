@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Builder"
+  short_description: "Design skills from real user needs and questions"
+  default_prompt: "Use $skill-builder to define what this Skill should solve."

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "description": "Upstream Skills used alongside Codex Workbench but not redistributed by this repository.",
+  "skills": [
+    {
+      "name": "find-skills",
+      "source": "https://github.com/vercel-labs/skills",
+      "path": "skills/find-skills"
+    },
+    {
+      "name": "nestjs-best-practices",
+      "source": "https://github.com/kadajett/agent-nestjs-skills",
+      "path": "."
+    },
+    {
+      "name": "typeorm",
+      "source": "https://github.com/mindrally/skills",
+      "path": "typeorm"
+    },
+    {
+      "name": "skill-creator",
+      "source": "https://github.com/anthropics/skills",
+      "path": "skills/skill-creator"
+    },
+    {
+      "name": "shadcn",
+      "source": "https://github.com/shadcn/ui",
+      "path": "skills/shadcn"
+    },
+    {
+      "name": "ai-sdk",
+      "source": "https://github.com/vercel/ai",
+      "path": "skills/use-ai-sdk"
+    },
+    {
+      "name": "voltagent-best-practices",
+      "source": "https://github.com/voltagent/skills",
+      "path": "skills/voltagent-best-practices"
+    },
+    {
+      "name": "voltagent-docs-bundle",
+      "source": "https://github.com/voltagent/skills",
+      "path": "skills/voltagent-docs-bundle"
+    },
+    {
+      "name": "ai-elements",
+      "source": "https://github.com/vercel/ai-elements",
+      "path": "skills/ai-elements"
+    },
+    {
+      "name": "e2b-sandbox",
+      "source": "https://github.com/computesdk/sandbox-skills",
+      "path": "skills/e2b-sandbox"
+    },
+    {
+      "name": "agently-mail",
+      "source": "https://agent.qq.com/.well-known/skills/agently-mail/SKILL.md",
+      "path": "SKILL.md"
+    }
+  ],
+  "relatedProjects": [
+    {
+      "name": "Codrive",
+      "source": "https://github.com/lzj960515/codrive",
+      "skills": [
+        "codrive-control",
+        "codrive-forge",
+        "codrive-task",
+        "codrive-work"
+      ]
+    }
+  ],
+  "officialBundles": [
+    {
+      "name": "Anthropic artifact Skills",
+      "source": "https://github.com/anthropics/skills",
+      "skills": [
+        "docx",
+        "pdf",
+        "pptx",
+        "xlsx"
+      ],
+      "note": "Obtain these Skills from their official distribution and follow the upstream license. Their implementation is not copied here."
+    }
+  ]
+}

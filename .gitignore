@@ -1,0 +1,12 @@
+.DS_Store
+*.dtmp
+*.py[cod]
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+tmp/
+.idea/
+.vscode/
+.task_handoff_state/

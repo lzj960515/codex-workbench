@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mindmap"
+  short_description: "把想法、文档和代码整理为可编辑的草图思维导图并导出PNG"
+  default_prompt: "Use $mindmap to organize this material into an editable sketch mind map and export its PNG."
