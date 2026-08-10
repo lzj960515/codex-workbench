@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Iterator, Optional, Tuple
 
 
-HANDOFF_THRESHOLD_PERCENT = 70
+HANDOFF_THRESHOLD_PERCENT = 80
 HANDOFF_REMINDER = (
-    "上下文使用率已达到 70%。继续工作前，按照 AGENTS.md 的“长任务状态交接”"
+    "上下文使用率已达到 80%。继续工作前，按照 AGENTS.md 的“长任务状态交接”"
     "创建或更新目标项目 tmp/ 中当前任务的状态文件。"
 )
 
