@@ -48,6 +48,24 @@ class SkillContractTest(unittest.TestCase):
             with self.subTest(contract=contract):
                 self.assertIn(contract, package)
 
+    def test_tdd_skill_preserves_risk_based_verification_contracts(self) -> None:
+        package = read_skill_package("test-driven-development")
+        required_contracts = (
+            "用户明确要求 TDD 或先写测试时始终使用",
+            "业务分支与计算规则",
+            "公共 API 或事件契约",
+            "并发与乱序",
+            "优先使用直接验证",
+            "能由 build、typecheck、lint、配置渲染或调用检查完整证明",
+            "选择与风险相称的验证方式",
+            "决定不新增测试后",
+            "测试数量服从风险覆盖",
+        )
+
+        for contract in required_contracts:
+            with self.subTest(contract=contract):
+                self.assertIn(contract, package)
+
     def test_wiki_maintainer_preserves_persistent_knowledge_contracts(self) -> None:
         package = read_skill_package("wiki-maintainer")
         required_contracts = (
