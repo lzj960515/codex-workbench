@@ -66,6 +66,40 @@ class SkillContractTest(unittest.TestCase):
             with self.subTest(contract=contract):
                 self.assertIn(contract, package)
 
+    def test_code_review_unifies_candidate_feedback_and_rereview_contracts(self) -> None:
+        package = read_skill_package("code-review")
+        required_contracts = (
+            "资深 Maintainer",
+            "候选审查",
+            "接收审查意见",
+            "复审",
+            "真实交付阻塞",
+            "业务约束",
+            "支持的输入路径",
+            "代码层面可以构造",
+            "批准",
+            "修改",
+            "回复",
+            "请求产品决定",
+            "重新判断",
+            "反证",
+            "architecture-design-review",
+            "systematic-debugging",
+            "verification-before-completion",
+        )
+
+        for contract in required_contracts:
+            with self.subTest(contract=contract):
+                self.assertIn(contract, package)
+
+    def test_code_review_replaces_the_receiving_only_skill(self) -> None:
+        self.assertTrue((SKILLS_ROOT / "code-review" / "SKILL.md").is_file())
+        self.assertFalse((SKILLS_ROOT / "receiving-code-review").exists())
+
+        readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("[`code-review`](skills/code-review/)", readme)
+        self.assertNotIn("receiving-code-review", readme)
+
     def test_wiki_maintainer_preserves_persistent_knowledge_contracts(self) -> None:
         package = read_skill_package("wiki-maintainer")
         required_contracts = (

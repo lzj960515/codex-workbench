@@ -32,7 +32,7 @@ python3 scripts/install.py
 | Skill | 用途 |
 | --- | --- |
 | [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
-| [`receiving-code-review`](skills/receiving-code-review/) | 评估代码审查意见，并依据代码和业务证据决定如何处理。 |
+| [`code-review`](skills/code-review/) | 审查候选、评估审查意见并在返工后复审，以真实交付风险推动结论收敛。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`test-driven-development`](skills/test-driven-development/) | 按回归风险选择 TDD 或直接验证，并用失败测试保护高风险行为。 |
 | [`verification-before-completion`](skills/verification-before-completion/) | 在完成、提交、推送或发布前建立与声明相匹配的验证证据。 |
