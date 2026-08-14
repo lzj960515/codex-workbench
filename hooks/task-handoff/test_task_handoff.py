@@ -9,7 +9,7 @@ from pathlib import Path
 
 HOOK_PATH = Path(__file__).with_name("task_handoff.py")
 HANDOFF_REMINDER = (
-    "上下文使用率已达到 80%。继续工作前，按照 AGENTS.md 的“长任务状态交接”"
+    "上下文使用率已达到 70%。继续工作前，按照 AGENTS.md 的“长任务状态交接”"
     "创建或更新目标项目 tmp/ 中当前任务的状态文件。"
 )
 
@@ -80,21 +80,21 @@ def run_hook(records: list[dict], event_name: str = "UserPromptSubmit") -> str:
 
 class TaskHandoffHookTest(unittest.TestCase):
     def test_below_threshold_remains_silent(self) -> None:
-        output = run_hook([token_count(79), user_message("继续当前任务")])
+        output = run_hook([token_count(69), user_message("继续当前任务")])
 
         self.assertEqual("", output)
 
     def test_high_usage_without_reminder_emits_handoff(self) -> None:
-        output = run_hook([token_count(80), user_message("继续当前任务")])
+        output = run_hook([token_count(70), user_message("继续当前任务")])
 
         self.assertIn(HANDOFF_REMINDER, output)
 
     def test_new_user_message_resets_previous_handoff_reminder(self) -> None:
         output = run_hook(
             [
-                token_count(85),
+                token_count(75),
                 handoff_reminder(),
-                token_count(90),
+                token_count(80),
                 user_message("开始处理另一个任务"),
             ]
         )
@@ -104,10 +104,10 @@ class TaskHandoffHookTest(unittest.TestCase):
     def test_same_user_message_is_only_reminded_once(self) -> None:
         output = run_hook(
             [
-                token_count(85),
+                token_count(75),
                 user_message("开始处理另一个任务"),
                 handoff_reminder(),
-                token_count(90),
+                token_count(80),
             ],
             event_name="PostToolUse",
         )
@@ -116,7 +116,7 @@ class TaskHandoffHookTest(unittest.TestCase):
 
     def test_old_reminder_remains_valid_until_next_user_message(self) -> None:
         output = run_hook(
-            [token_count(85), handoff_reminder(), token_count(90)],
+            [token_count(75), handoff_reminder(), token_count(80)],
             event_name="PostToolUse",
         )
 
@@ -125,10 +125,10 @@ class TaskHandoffHookTest(unittest.TestCase):
     def test_post_tool_use_honors_new_user_message_after_old_reminder(self) -> None:
         output = run_hook(
             [
-                token_count(85),
+                token_count(75),
                 handoff_reminder(),
                 user_message("开始处理另一个任务"),
-                token_count(90),
+                token_count(80),
             ],
             event_name="PostToolUse",
         )
@@ -142,7 +142,7 @@ class TaskHandoffHookTest(unittest.TestCase):
             transcript_path.write_text(
                 "".join(
                     f"{json.dumps(record, ensure_ascii=False)}\n"
-                    for record in [token_count(85), user_message("继续当前任务")]
+                    for record in [token_count(75), user_message("继续当前任务")]
                 ),
                 encoding="utf-8",
             )
