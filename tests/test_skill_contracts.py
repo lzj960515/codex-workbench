@@ -1,3 +1,4 @@
+import json
 import unittest
 from pathlib import Path
 
@@ -69,7 +70,7 @@ class SkillContractTest(unittest.TestCase):
     def test_code_review_unifies_candidate_feedback_and_rereview_contracts(self) -> None:
         package = read_skill_package("code-review")
         required_contracts = (
-            "资深 Maintainer",
+            "资深维护者",
             "候选审查",
             "接收审查意见",
             "复审",
@@ -77,13 +78,13 @@ class SkillContractTest(unittest.TestCase):
             "业务约束",
             "支持的输入路径",
             "代码层面可以构造",
-            "Review 不是找 Bug 的竞赛",
-            "finding 数量",
+            "代码审查不是找缺陷的竞赛",
+            "发现的问题数量",
             "业务结果",
-            "Finding 准入检查",
+            "审查问题准入检查",
             "受支持生产者",
             "可观察的交付影响",
-            "Review 的默认产物",
+            "代码审查的默认产物",
             "批准",
             "修改",
             "回复",
@@ -98,6 +99,48 @@ class SkillContractTest(unittest.TestCase):
         for contract in required_contracts:
             with self.subTest(contract=contract):
                 self.assertIn(contract, package)
+
+    def test_quality_skills_preserve_decision_and_stopping_contracts(self) -> None:
+        contracts = {
+            "skill-builder": (
+                "可观察的错误行为",
+                "优化什么结果",
+                "正确停止方式",
+            ),
+            "maintainable-implementation": (
+                "smallest complete boundary",
+                "A direct local implementation is a successful result",
+                "single lowest-cost check that directly proves it",
+            ),
+            "systematic-debugging": (
+                "根因已确认",
+                "主要假设",
+                "证据不足",
+                "只诊断",
+            ),
+            "verification-before-completion": (
+                "本地实现或文档完成",
+                "已推送",
+                "制品已发布",
+                "线上行为已验证",
+            ),
+        }
+
+        for skill_name, required_contracts in contracts.items():
+            package = read_skill_package(skill_name)
+            for contract in required_contracts:
+                with self.subTest(skill=skill_name, contract=contract):
+                    self.assertIn(contract, package)
+
+    def test_removed_quality_skills_are_not_recommended(self) -> None:
+        manifest_path = REPOSITORY_ROOT / "manifests" / "third-party-skills.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        names = {skill["name"] for skill in manifest["skills"]}
+
+        self.assertNotIn("nestjs-best-practices", names)
+        self.assertNotIn("typeorm", names)
+        self.assertNotIn("skill-creator", names)
+        self.assertTrue((SKILLS_ROOT / "skill-creator" / "SKILL.md").is_file())
 
     def test_code_review_replaces_the_receiving_only_skill(self) -> None:
         self.assertTrue((SKILLS_ROOT / "code-review" / "SKILL.md").is_file())

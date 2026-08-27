@@ -8,21 +8,6 @@
       "path": "skills/find-skills"
     },
     {
-      "name": "nestjs-best-practices",
-      "source": "https://github.com/kadajett/agent-nestjs-skills",
-      "path": "."
-    },
-    {
-      "name": "typeorm",
-      "source": "https://github.com/mindrally/skills",
-      "path": "typeorm"
-    },
-    {
-      "name": "skill-creator",
-      "source": "https://github.com/anthropics/skills",
-      "path": "skills/skill-creator"
-    },
-    {
       "name": "shadcn",
       "source": "https://github.com/shadcn/ui",
       "path": "skills/shadcn"

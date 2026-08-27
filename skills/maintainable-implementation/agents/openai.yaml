@@ -1,0 +1,7 @@
+interface:
+  display_name: "Maintainable Implementation"
+  short_description: "Size code changes and keep their responsibilities readable"
+  default_prompt: "Use $maintainable-implementation to classify this change and implement it with proportionate reuse, refactoring, and verification."
+
+policy:
+  allow_implicit_invocation: true

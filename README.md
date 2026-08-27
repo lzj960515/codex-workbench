@@ -33,10 +33,13 @@ python3 scripts/install.py
 | --- | --- |
 | [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
 | [`code-review`](skills/code-review/) | 审查候选、评估审查意见并在返工后复审，以真实交付风险推动结论收敛。 |
+| [`deep-discussion`](skills/deep-discussion/) | 依据真实证据推进复杂讨论，并按后续生命周期选择直接答复或持续文档。 |
+| [`maintainable-implementation`](skills/maintainable-implementation/) | 为普通代码改动选择合适的实现尺度、复用方式和职责边界。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`test-driven-development`](skills/test-driven-development/) | 按回归风险选择 TDD 或直接验证，并用失败测试保护高风险行为。 |
 | [`verification-before-completion`](skills/verification-before-completion/) | 在完成、提交、推送或发布前建立与声明相匹配的验证证据。 |
 | [`skill-builder`](skills/skill-builder/) | 从真实需求设计 Skill 的职责、边界和验收标准。 |
+| [`skill-creator`](skills/skill-creator/) | 实现、组织、校验和评测已经明确职责的 Skill 工程包。 |
 | [`source-repo-study`](skills/source-repo-study/) | 系统研究源码仓库，并整理成架构、功能和数据流 Wiki。 |
 | [`wiki-maintainer`](skills/wiki-maintainer/) | 持续摄取和修订 Markdown Wiki，维护索引、链接和知识一致性。 |
 | [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
@@ -44,6 +47,8 @@ python3 scripts/install.py
 | [`design-extractor`](skills/design-extractor/) | 从网站提取品牌视觉语言并生成标准 `DESIGN.md`。 |
 
 `drawio` 和 `mindmap` 需要安装 draw.io Desktop，并让 `drawio` 命令可以从终端调用。
+
+`skill-creator` 基于 Anthropic 发布的 Apache-2.0 版本持续修改，目录内保留原许可证和修改说明。
 
 ## Hooks 清单
 
@@ -59,7 +64,7 @@ python3 scripts/install.py
 
 ## 第三方内容
 
-第三方 Skills、Codrive 和文档处理 Skills 的官方来源记录在 [`manifests/third-party-skills.json`](manifests/third-party-skills.json)，使用时遵循对应项目的许可证。
+仍由上游维护的第三方 Skills、Codrive 和文档处理 Skills 来源记录在 [`manifests/third-party-skills.json`](manifests/third-party-skills.json)，使用时遵循对应项目的许可证。
 
 ## 许可证
 

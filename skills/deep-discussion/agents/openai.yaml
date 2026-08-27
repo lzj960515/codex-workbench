@@ -1,0 +1,7 @@
+interface:
+  display_name: "深度讨论"
+  short_description: "按证据推进复杂讨论，并选择直接答复或持续维护方案文档"
+  default_prompt: "使用 $deep-discussion 与我一起把这个方案想清楚，并自主选择直接答复或维护持续文档。"
+
+policy:
+  allow_implicit_invocation: true
