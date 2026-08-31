@@ -22,17 +22,17 @@ cd codex-workbench
 python3 scripts/install.py
 ```
 
-仓库中的 `skills/` 是这些 Skill 的 Git 权威来源。安装器默认把每个 Skill 单独符号链接到 `~/.agents/skills`，不会改变该目录中的其他 Skill；之后直接修改仓库文件即可，不需要再同步本机副本。仓库位置移动后，重新运行安装器即可修复链接。
+仓库中的 `AGENTS.md` 和 `skills/` 是对应用户规则与 Skill 的 Git 权威来源。安装器默认把 `AGENTS.md` 链接到 `~/.codex/AGENTS.md`，并把每个仓库 Skill 单独链接到 `~/.agents/skills`；其他本机 Skill 不受影响。之后直接修改仓库文件即可，不需要再同步本机副本。仓库位置移动后，重新运行安装器即可修复断链。
 
-安装器会在修改 Skill 前检查全部目标。已有相同内容的目录会安全转换为链接，仓库移动后留下的断链会自动修复；已有不同内容、指向其他现存来源的链接或同名文件时，安装会整体停止并保留本机内容。不支持符号链接的环境可以安装独立副本：
+安装器会在写入前一起检查用户规则和全部仓库 Skill。已有相同内容的文件或目录会安全转换为链接，仓库移动后留下的断链会自动修复；已有不同内容、指向其他现存来源的链接或同名目标时，安装会整体停止并保留本机内容。不支持符号链接的环境可以安装独立副本：
 
 ```bash
-python3 scripts/install.py --skills-mode copy
+python3 scripts/install.py --skills-mode copy --agents-mode copy
 ```
 
-只安装用户级 `AGENTS.md` 和 Hooks 时使用 `--skills-mode skip`。Skill 聚合目录可以通过 `--skills-directory` 指定。
+`--skills-mode` 和 `--agents-mode` 分别支持 `link`、`copy` 和 `skip`。只安装用户规则与 Hooks 时使用 `--skills-mode skip`；需要保留含私人内容的本机 `AGENTS.md` 时使用 `--agents-mode skip`，该文件不会进入仓库单一来源。Skill 聚合目录和 Codex 用户目录可以分别通过 `--skills-directory` 与 `--codex-home` 指定。
 
-已有不同的用户级 `AGENTS.md` 会被保留，并生成 `AGENTS.codex-workbench.md` 供 AI 合并。
+公开仓库只保存适合公开、跨设备复用的内容。私人资料、机器专属绝对路径、密钥和内部项目知识保留在本机或对应项目中，不通过本仓库连接。
 
 也可以直接把仓库地址交给 AI，让它阅读本文件并完成安装和合并。
 

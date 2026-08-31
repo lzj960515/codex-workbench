@@ -9,16 +9,23 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".drawio", ".json", ".md", ".py", ".txt", ".yaml", ".yml"}
 GENERATED_NAMES = {".DS_Store", "__pycache__"}
 GENERATED_SUFFIXES = {".dtmp", ".pyc", ".pyo"}
+ROOT_LOCAL_ONLY_DIRECTORIES = {".worktrees", "tmp"}
+IGNORED_DIRECTORIES = {".git", "__pycache__"}
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
 
 def content_patterns() -> dict[str, re.Pattern[str]]:
     user_home = "/" + "Users" + "/"
     linux_home = "/" + "home" + "/"
-    private_key = "BEGIN " + "PRIVATE KEY"
+    private_key = r"BEGIN (?:[A-Z0-9]+ )*" + "PRIVATE KEY"
     company_name = "pie" + "tra"
     workspace_name = "parsec" + "-project"
-    token_prefixes = "(?:ghp|github_pat|sk|xox[baprs])-" + r"[A-Za-z0-9_-]{12,}"
+    access_token = (
+        r"(?:gh[pousr]_[A-Za-z0-9]{20,}"
+        r"|github_pat_[A-Za-z0-9_]{20,}"
+        r"|sk-[A-Za-z0-9_-]{12,}"
+        r"|xox[baprs]-[A-Za-z0-9_-]{12,})"
+    )
     return {
         "absolute user path": re.compile(
             rf"(?:{re.escape(user_home)}|{re.escape(linux_home)})[^\s'\"<>]+"
@@ -26,8 +33,8 @@ def content_patterns() -> dict[str, re.Pattern[str]]:
         "email address": re.compile(
             r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
         ),
-        "private key": re.compile(re.escape(private_key)),
-        "access token": re.compile(token_prefixes),
+        "private key": re.compile(private_key),
+        "access token": re.compile(access_token),
         "cloud access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
         "project-specific term": re.compile(
             rf"(?:{company_name}|{workspace_name})", re.IGNORECASE
@@ -53,10 +60,13 @@ def audit_repository(root: Path) -> list[str]:
     patterns = content_patterns()
 
     for path in sorted(root.rglob("*")):
-        if ".git" in path.parts or "__pycache__" in path.parts:
+        relative_path = path.relative_to(root)
+        if (
+            relative_path.parts[0] in ROOT_LOCAL_ONLY_DIRECTORIES
+            or any(part in IGNORED_DIRECTORIES for part in relative_path.parts)
+        ):
             continue
 
-        relative_path = path.relative_to(root)
         if path.name in GENERATED_NAMES or path.suffix in GENERATED_SUFFIXES:
             findings.append(f"generated file: {relative_path}")
             continue

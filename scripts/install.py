@@ -8,6 +8,7 @@ import shutil
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from typing import Callable, Optional
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -16,19 +17,19 @@ IGNORED_NAMES = {".DS_Store", "__pycache__"}
 IGNORED_SUFFIXES = {".dtmp", ".pyc"}
 
 
-class SkillTargetState(Enum):
+class ManagedTargetState(Enum):
     MISSING = "missing"
     CURRENT_LINK = "current-link"
     BROKEN_LINK = "broken-link"
-    IDENTICAL_DIRECTORY = "identical-directory"
+    IDENTICAL_CONTENT = "identical-content"
     CONFLICT = "conflict"
 
 
 @dataclass(frozen=True)
-class SkillInstallationPlan:
+class ManagedInstallationPlan:
     source: Path
     target: Path
-    state: SkillTargetState
+    state: ManagedTargetState
 
 
 def copy_tree(source: Path, target: Path) -> None:
@@ -69,40 +70,66 @@ def tree_snapshot(directory: Path) -> dict[Path, tuple[str, object]]:
     return snapshot
 
 
-def inspect_skill_target(source: Path, target: Path) -> SkillTargetState:
+def files_match(source: Path, target: Path) -> bool:
+    return target.is_file() and target.read_bytes() == source.read_bytes()
+
+
+def directories_match(source: Path, target: Path) -> bool:
+    return target.is_dir() and tree_snapshot(target) == tree_snapshot(source)
+
+
+def inspect_managed_target(
+    source: Path,
+    target: Path,
+    content_matches: Callable[[Path, Path], bool],
+) -> ManagedTargetState:
     if target.is_symlink():
         try:
             resolved_target = target.resolve(strict=True)
         except FileNotFoundError:
-            return SkillTargetState.BROKEN_LINK
+            return ManagedTargetState.BROKEN_LINK
         return (
-            SkillTargetState.CURRENT_LINK
+            ManagedTargetState.CURRENT_LINK
             if resolved_target == source.resolve()
-            else SkillTargetState.CONFLICT
+            else ManagedTargetState.CONFLICT
         )
 
     if not target.exists():
-        return SkillTargetState.MISSING
+        return ManagedTargetState.MISSING
 
-    if target.is_dir() and tree_snapshot(target) == tree_snapshot(source):
-        return SkillTargetState.IDENTICAL_DIRECTORY
+    if content_matches(source, target):
+        return ManagedTargetState.IDENTICAL_CONTENT
 
-    return SkillTargetState.CONFLICT
+    return ManagedTargetState.CONFLICT
 
 
-def plan_skill_installation(skills_directory: Path) -> list[SkillInstallationPlan]:
+def plan_skill_installation(skills_directory: Path) -> list[ManagedInstallationPlan]:
     return [
-        SkillInstallationPlan(
+        ManagedInstallationPlan(
             source=source,
             target=skills_directory / source.name,
-            state=inspect_skill_target(source, skills_directory / source.name),
+            state=inspect_managed_target(
+                source,
+                skills_directory / source.name,
+                directories_match,
+            ),
         )
         for source in repository_skill_directories()
     ]
 
 
-def reject_skill_conflicts(plans: list[SkillInstallationPlan]) -> None:
-    conflicts = [plan for plan in plans if plan.state is SkillTargetState.CONFLICT]
+def plan_agents_installation(codex_home: Path) -> ManagedInstallationPlan:
+    source = REPOSITORY_ROOT / "AGENTS.md"
+    target = codex_home / "AGENTS.md"
+    return ManagedInstallationPlan(
+        source=source,
+        target=target,
+        state=inspect_managed_target(source, target, files_match),
+    )
+
+
+def reject_conflicts(plans: list[ManagedInstallationPlan]) -> None:
+    conflicts = [plan for plan in plans if plan.state is ManagedTargetState.CONFLICT]
     if not conflicts:
         return
 
@@ -110,64 +137,79 @@ def reject_skill_conflicts(plans: list[SkillInstallationPlan]) -> None:
         f"- {plan.source.name}: {plan.target}" for plan in conflicts
     )
     raise SystemExit(
-        "Skill installation stopped because local content differs from the "
+        "Installation stopped because local content differs from the "
         f"repository:\n{details}"
     )
 
 
-def link_skill(plan: SkillInstallationPlan) -> None:
-    if plan.state is SkillTargetState.CURRENT_LINK:
-        print(f"Using linked Skill {plan.source.name} -> {plan.source}")
-        return
-
-    if plan.state is SkillTargetState.IDENTICAL_DIRECTORY:
+def remove_existing_target(plan: ManagedInstallationPlan) -> None:
+    if plan.target.is_dir() and not plan.target.is_symlink():
         shutil.rmtree(plan.target)
-    elif plan.state is SkillTargetState.BROKEN_LINK:
+    else:
         plan.target.unlink()
 
-    plan.target.symlink_to(plan.source.resolve(), target_is_directory=True)
-    print(f"Linked Skill {plan.source.name} -> {plan.source}")
 
-
-def copy_skill(plan: SkillInstallationPlan) -> None:
-    if plan.state is SkillTargetState.IDENTICAL_DIRECTORY:
-        print(f"Using copied Skill {plan.source.name} -> {plan.target}")
+def link_managed_path(plan: ManagedInstallationPlan, label: str) -> None:
+    if plan.state is ManagedTargetState.CURRENT_LINK:
+        print(f"Using linked {label} {plan.source.name} -> {plan.source}")
         return
 
     if plan.state in (
-        SkillTargetState.CURRENT_LINK,
-        SkillTargetState.BROKEN_LINK,
+        ManagedTargetState.IDENTICAL_CONTENT,
+        ManagedTargetState.BROKEN_LINK,
     ):
-        plan.target.unlink()
+        remove_existing_target(plan)
 
-    copy_tree(plan.source, plan.target)
-    print(f"Copied Skill {plan.source.name} -> {plan.target}")
+    plan.target.symlink_to(
+        plan.source.resolve(),
+        target_is_directory=plan.source.is_dir(),
+    )
+    print(f"Linked {label} {plan.source.name} -> {plan.source}")
 
 
-def install_skills(skills_directory: Path, mode: str) -> None:
-    if mode == "skip":
+def copy_managed_path(plan: ManagedInstallationPlan, label: str) -> None:
+    if plan.state is ManagedTargetState.IDENTICAL_CONTENT:
+        print(f"Using copied {label} {plan.source.name} -> {plan.target}")
         return
 
-    plans = plan_skill_installation(skills_directory)
-    reject_skill_conflicts(plans)
-    skills_directory.mkdir(parents=True, exist_ok=True)
+    if plan.state in (
+        ManagedTargetState.CURRENT_LINK,
+        ManagedTargetState.BROKEN_LINK,
+    ):
+        remove_existing_target(plan)
 
-    install_skill = link_skill if mode == "link" else copy_skill
+    if plan.source.is_dir():
+        copy_tree(plan.source, plan.target)
+    else:
+        shutil.copy2(plan.source, plan.target)
+    print(f"Copied {label} {plan.source.name} -> {plan.target}")
+
+
+def install_skills(plans: list[ManagedInstallationPlan], mode: str) -> None:
+    if not plans:
+        return
+
+    plans[0].target.parent.mkdir(parents=True, exist_ok=True)
+
     for plan in plans:
-        install_skill(plan)
+        if mode == "link":
+            link_managed_path(plan, "Skill")
+        else:
+            copy_managed_path(plan, "Skill")
 
 
-def install_agents_file(codex_home: Path) -> None:
-    source = REPOSITORY_ROOT / "AGENTS.md"
-    target = codex_home / "AGENTS.md"
-    if not target.exists() or target.read_bytes() == source.read_bytes():
-        shutil.copy2(source, target)
-        print(f"Installed AGENTS.md -> {target}")
+def install_agents_file(
+    plan: Optional[ManagedInstallationPlan],
+    mode: str,
+) -> None:
+    if plan is None:
         return
 
-    merge_source = codex_home / "AGENTS.codex-workbench.md"
-    shutil.copy2(source, merge_source)
-    print(f"Existing AGENTS.md preserved; ask your AI to merge {merge_source} into {target}")
+    plan.target.parent.mkdir(parents=True, exist_ok=True)
+    if mode == "link":
+        link_managed_path(plan, "user rules")
+    else:
+        copy_managed_path(plan, "user rules")
 
 
 def load_task_handoff_template(command: str) -> dict:
@@ -244,14 +286,32 @@ def parse_args() -> argparse.Namespace:
         default="link",
         help="Install Skills as repository links, independent copies, or skip them.",
     )
+    parser.add_argument(
+        "--agents-mode",
+        choices=("link", "copy", "skip"),
+        default="link",
+        help="Install AGENTS.md as a repository link, independent copy, or skip it.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    install_skills(args.skills_directory, args.skills_mode)
-    args.codex_home.mkdir(parents=True, exist_ok=True)
-    install_agents_file(args.codex_home)
+    skill_plans = (
+        []
+        if args.skills_mode == "skip"
+        else plan_skill_installation(args.skills_directory)
+    )
+    agents_plan = (
+        None
+        if args.agents_mode == "skip"
+        else plan_agents_installation(args.codex_home)
+    )
+    managed_plans = skill_plans + ([agents_plan] if agents_plan else [])
+
+    reject_conflicts(managed_plans)
+    install_skills(skill_plans, args.skills_mode)
+    install_agents_file(agents_plan, args.agents_mode)
     install_hooks(args.codex_home)
 
 
