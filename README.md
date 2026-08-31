@@ -13,17 +13,26 @@
 
 ## 安装
 
-需要 Node.js 22.20 或更高版本，以及 Python 3.9 或更高版本。
+安装需要 Python 3.9 或更高版本。
 
 ```bash
 git clone https://github.com/lzj960515/codex-workbench.git
 cd codex-workbench
 
-npx skills add . --global --agent codex --skill '*' --yes --copy
 python3 scripts/install.py
 ```
 
-`npx skills add` 使用通用 Skills CLI 安装仓库中的 Skills。`scripts/install.py` 只安装用户级 `AGENTS.md` 和 Hooks；已有不同的 `AGENTS.md` 会被保留，并生成 `AGENTS.codex-workbench.md` 供 AI 合并。
+仓库中的 `skills/` 是这些 Skill 的 Git 权威来源。安装器默认把每个 Skill 单独符号链接到 `~/.agents/skills`，不会改变该目录中的其他 Skill；之后直接修改仓库文件即可，不需要再同步本机副本。仓库位置移动后，重新运行安装器即可修复链接。
+
+安装器会在修改 Skill 前检查全部目标。已有相同内容的目录会安全转换为链接，仓库移动后留下的断链会自动修复；已有不同内容、指向其他现存来源的链接或同名文件时，安装会整体停止并保留本机内容。不支持符号链接的环境可以安装独立副本：
+
+```bash
+python3 scripts/install.py --skills-mode copy
+```
+
+只安装用户级 `AGENTS.md` 和 Hooks 时使用 `--skills-mode skip`。Skill 聚合目录可以通过 `--skills-directory` 指定。
+
+已有不同的用户级 `AGENTS.md` 会被保留，并生成 `AGENTS.codex-workbench.md` 供 AI 合并。
 
 也可以直接把仓库地址交给 AI，让它阅读本文件并完成安装和合并。
 

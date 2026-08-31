@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -11,25 +12,39 @@ INSTALLER = REPOSITORY_ROOT / "scripts" / "install.py"
 
 
 class InstallerTest(unittest.TestCase):
-    def run_installer(self, codex_home: Path) -> subprocess.CompletedProcess[str]:
+    def run_installer(
+        self,
+        codex_home: Path,
+        skills_directory: Path,
+        *,
+        skills_mode: str = "link",
+        check: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [
                 sys.executable,
                 str(INSTALLER),
                 "--codex-home",
                 str(codex_home),
+                "--skills-directory",
+                str(skills_directory),
+                "--skills-mode",
+                skills_mode,
             ],
-            check=True,
+            check=check,
             capture_output=True,
             text=True,
         )
 
+    def make_installation_paths(self, root: Path) -> tuple[Path, Path]:
+        return root / "codex", root / "agents" / "skills"
+
     def test_fresh_install_installs_rules_and_portable_hooks(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            codex_home = root / "codex"
+            codex_home, skills_directory = self.make_installation_paths(root)
 
-            self.run_installer(codex_home)
+            self.run_installer(codex_home, skills_directory)
 
             self.assertEqual(
                 (REPOSITORY_ROOT / "AGENTS.md").read_text(encoding="utf-8"),
@@ -48,15 +63,20 @@ class InstallerTest(unittest.TestCase):
             self.assertEqual("^compact$", session_start["matcher"])
             self.assertEqual(3, session_start["hooks"][0]["timeout"])
 
+            source = REPOSITORY_ROOT / "skills" / "deep-discussion"
+            installed = skills_directory / "deep-discussion"
+            self.assertTrue(installed.is_symlink())
+            self.assertEqual(source.resolve(), installed.resolve())
+
     def test_existing_agents_file_is_preserved_for_ai_assisted_merge(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            codex_home = root / "codex"
+            codex_home, skills_directory = self.make_installation_paths(root)
             codex_home.mkdir(parents=True)
             existing_content = "# Existing user rules\n"
             (codex_home / "AGENTS.md").write_text(existing_content, encoding="utf-8")
 
-            result = self.run_installer(codex_home)
+            result = self.run_installer(codex_home, skills_directory)
 
             self.assertEqual(existing_content, (codex_home / "AGENTS.md").read_text(encoding="utf-8"))
             self.assertTrue((codex_home / "AGENTS.codex-workbench.md").is_file())
@@ -65,7 +85,7 @@ class InstallerTest(unittest.TestCase):
     def test_existing_unrelated_hooks_are_preserved(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            codex_home = root / "codex"
+            codex_home, skills_directory = self.make_installation_paths(root)
             codex_home.mkdir(parents=True)
             existing_hooks = {
                 "description": "Existing hooks",
@@ -83,7 +103,7 @@ class InstallerTest(unittest.TestCase):
                 json.dumps(existing_hooks), encoding="utf-8"
             )
 
-            self.run_installer(codex_home)
+            self.run_installer(codex_home, skills_directory)
 
             hooks = json.loads((codex_home / "hooks.json").read_text(encoding="utf-8"))
             commands = [
@@ -93,6 +113,152 @@ class InstallerTest(unittest.TestCase):
             ]
             self.assertIn("/usr/bin/example-hook", commands)
             self.assertTrue(any("task_handoff.py" in command for command in commands))
+
+    def test_link_install_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+
+            self.run_installer(codex_home, skills_directory)
+            self.run_installer(codex_home, skills_directory)
+
+            for source in sorted((REPOSITORY_ROOT / "skills").glob("*/SKILL.md")):
+                installed = skills_directory / source.parent.name
+                with self.subTest(skill=source.parent.name):
+                    self.assertTrue(installed.is_symlink())
+                    self.assertEqual(source.parent.resolve(), installed.resolve())
+
+    def test_identical_skill_directory_is_converted_to_link(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+            source = REPOSITORY_ROOT / "skills" / "deep-discussion"
+            installed = skills_directory / "deep-discussion"
+            shutil.copytree(source, installed)
+            (installed / ".DS_Store").touch()
+            cache_directory = installed / "__pycache__"
+            cache_directory.mkdir()
+            (cache_directory / "generated.pyc").touch()
+            (installed / "transient.dtmp").touch()
+
+            self.run_installer(codex_home, skills_directory)
+
+            self.assertTrue(installed.is_symlink())
+            self.assertEqual(source.resolve(), installed.resolve())
+
+    def test_conflict_stops_all_skill_migration_before_changes(self) -> None:
+        for skills_mode in ("link", "copy"):
+            with self.subTest(skills_mode=skills_mode):
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    codex_home, skills_directory = self.make_installation_paths(root)
+                    conflicting = skills_directory / "wiki-maintainer"
+                    conflicting.mkdir(parents=True)
+                    (conflicting / "SKILL.md").write_text(
+                        "# Local work that must be preserved\n",
+                        encoding="utf-8",
+                    )
+
+                    result = self.run_installer(
+                        codex_home,
+                        skills_directory,
+                        skills_mode=skills_mode,
+                        check=False,
+                    )
+
+                    self.assertNotEqual(0, result.returncode)
+                    self.assertIn("wiki-maintainer", result.stderr)
+                    self.assertEqual(
+                        "# Local work that must be preserved\n",
+                        (conflicting / "SKILL.md").read_text(encoding="utf-8"),
+                    )
+                    self.assertFalse(
+                        (skills_directory / "architecture-design-review").exists()
+                    )
+
+    def test_link_to_another_source_is_preserved_as_a_conflict(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+            alternate_source = root / "alternate" / "deep-discussion"
+            shutil.copytree(
+                REPOSITORY_ROOT / "skills" / "deep-discussion",
+                alternate_source,
+            )
+            skills_directory.mkdir(parents=True)
+            installed = skills_directory / "deep-discussion"
+            installed.symlink_to(alternate_source, target_is_directory=True)
+
+            result = self.run_installer(
+                codex_home,
+                skills_directory,
+                check=False,
+            )
+
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn("deep-discussion", result.stderr)
+            self.assertTrue(installed.is_symlink())
+            self.assertEqual(alternate_source.resolve(), installed.resolve())
+
+    def test_broken_link_is_repaired_after_the_repository_moves(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+            skills_directory.mkdir(parents=True)
+            installed = skills_directory / "deep-discussion"
+            installed.symlink_to(
+                root / "old-location" / "skills" / "deep-discussion",
+                target_is_directory=True,
+            )
+
+            self.run_installer(codex_home, skills_directory)
+
+            source = REPOSITORY_ROOT / "skills" / "deep-discussion"
+            self.assertTrue(installed.is_symlink())
+            self.assertEqual(source.resolve(), installed.resolve())
+
+    def test_copy_mode_installs_regular_directories(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+
+            self.run_installer(
+                codex_home,
+                skills_directory,
+                skills_mode="copy",
+            )
+
+            source = REPOSITORY_ROOT / "skills" / "deep-discussion" / "SKILL.md"
+            installed_directory = skills_directory / "deep-discussion"
+            self.assertTrue(installed_directory.is_dir())
+            self.assertFalse(installed_directory.is_symlink())
+            self.assertEqual(
+                source.read_text(encoding="utf-8"),
+                (installed_directory / "SKILL.md").read_text(encoding="utf-8"),
+            )
+
+    def test_skip_mode_only_installs_rules_and_hooks(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            codex_home, skills_directory = self.make_installation_paths(root)
+
+            self.run_installer(
+                codex_home,
+                skills_directory,
+                skills_mode="skip",
+            )
+
+            self.assertTrue((codex_home / "AGENTS.md").is_file())
+            self.assertTrue((codex_home / "hooks" / "task_handoff.py").is_file())
+            self.assertFalse(skills_directory.exists())
+
+    def test_readme_uses_the_installer_as_the_single_installation_entrypoint(self) -> None:
+        readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("python3 scripts/install.py", readme)
+        self.assertIn("符号链接", readme)
+        self.assertIn("--skills-mode copy", readme)
+        self.assertNotIn("npx skills add", readme)
 
 
 if __name__ == "__main__":

@@ -5,19 +5,29 @@ description: Choose and implement an appropriately sized solution for ordinary c
 
 # Maintainable Implementation
 
-Turn an agreed requirement or root cause into code that a later reader can understand and extend without reconstructing the whole implementation. Scale the design work to the real change: a mechanical edit stays direct; a behavioral change receives explicit ownership and lifecycle decisions.
+Turn an agreed requirement or root cause into code that a later reader can understand and extend without reconstructing the whole implementation. Treat the agreed business outcome as the delivery boundary, then make every change required to complete that outcome at its real owner.
 
-This skill corrects two symmetric failure modes: patching behavior into the nearest file without understanding its owner, and treating more functions, classes, states, or workflow stages as inherently better design. The target is the smallest complete boundary that expresses the business action, owns its lifecycle, and leaves the next reader fewer decisions to reconstruct. A direct local implementation is a successful result when that boundary already exists.
+This skill corrects two symmetric failure modes: patching behavior into the nearest file without understanding its owner, and expanding a task because additional functions, classes, states, compatibility paths, or workflow stages are possible. The target is the smallest complete boundary that expresses the required business action, owns its lifecycle, and leaves the next reader fewer decisions to reconstruct. A direct local implementation is a successful result when that boundary already exists; a cross-file or upstream refactor is in scope when it restores the owner required by the agreed outcome.
 
-## 1. Classify The Change
+## 1. Establish The Delivery Boundary
 
 Before editing, identify:
 
-- the business outcome and observable behavior;
+- the agreed business outcome, observable behavior, and acceptance evidence;
 - the current entry point, owner, callers, and side effects;
+- the upstream decisions and downstream effects required to make that outcome correct;
 - whether the change is mechanical, local behavior, cross-responsibility behavior, or a new lifecycle;
-- the stable invariants and likely future variation;
-- the current code, internal capability, or dependency that already solves part of it.
+- the stable invariants and any known Roadmap variation that affects the current responsibility boundary;
+- the current code, internal capability, or dependency that already solves part of it;
+- adjacent ideas that are useful candidates but are not required by the current outcome.
+
+Every added product behavior, public API, dependency, state, persistence mechanism, configuration, fallback, compatibility path, or abstraction must be justified by the agreed outcome, an existing contract, or an observed risk. It is required when omitting it would make acceptance fail, violate an existing contract, or leave an observed risk unresolved. A useful enhancement, generic capability, or possible future reuse remains a separate follow-up candidate.
+
+Choose reversible internal details autonomously when they preserve the agreed observable behavior, data, security, compatibility range, and runtime lifecycle. Keep unspecified user-visible behavior, support commitments, and lasting operational responsibilities outside the product scope as explicit follow-up candidates. When such a choice is necessary to make the requirement executable and current evidence does not decide it, ask the single question that changes the outcome.
+
+Use current source, tests, product contracts, and the established root cause to prove necessity. Industry best practices and complete-lifecycle questions identify what to inspect; they do not by themselves require another product behavior, persistence mechanism, data operation, compatibility commitment, operational surface, or parallel entry-point change. When the repository or contract is unavailable, state the confirmed behavioral boundary and unresolved evidence instead of inventing a complete component model or acceptance suite.
+
+Derive tests from confirmed behavior, existing invariants, and the proven failure mechanism. Test completeness strengthens evidence for the agreed result; it does not expand the result into additional interactions, platforms, data operations, or lifecycle guarantees.
 
 A mechanical edit is a direct mapping, import, configuration wire, rename, or generated registration whose correctness can be fully understood locally. Implement it in place, review the changed mapping, and run the single lowest-cost check that directly proves it. A test earns its place when it protects project-owned behavior; a test that only repeats a value assignment or constructor argument does not add regression protection.
 
@@ -59,7 +69,7 @@ Refactor the relevant boundary when current structure would otherwise create one
 
 Keep the change local when the existing owner is stable, the new behavior fits its vocabulary, and extraction would only rename a few lines without isolating variation or side effects.
 
-Refactor the smallest complete boundary that restores ownership. Preserve unrelated architecture and avoid speculative extension points.
+Refactor the smallest complete boundary that restores ownership. A known next phase can justify a stable responsibility seam, while its future behavior, runtime state, and extension mechanism remain outside the current implementation until required.
 
 Split by responsibility, lifecycle, or independently meaningful failure behavior rather than by the number of code steps. Internal helpers can improve readability without becoming new domain objects, persistent states, Queue jobs, or framework stages.
 
@@ -96,13 +106,16 @@ Before validation, read the changed path from its entry point and confirm:
 - code sits with the responsibility that owns it;
 - dependencies point from domain behavior toward infrastructure boundaries;
 - names describe intent rather than control flow or data structures;
-- the next plausible requirement has a natural extension point;
+- related changes can extend the existing responsibility without another patch or a speculative extension point;
+- every lasting responsibility added by the change traces to the agreed outcome, an existing contract, or an observed risk;
+- every new user-visible behavior or support commitment was confirmed or is strictly necessary for acceptance;
 - the implementation contains no duplicate library capability, one-off abstraction, swallowed error, or unrelated cleanup.
 
 For a mechanical edit, finish with the direct check selected in step 1 and the final changed-file review. For a behavioral change, use the task's testing Skill and `verification-before-completion` to produce evidence proportional to risk.
 
 ## Boundaries
 
+- `deep-discussion` owns whether a proposed product goal should be pursued and when a candidate direction becomes a confirmed decision.
 - `architecture-design-review` owns public APIs, shared frameworks, cross-module state models, and major lifecycle redesign.
 - `systematic-debugging` owns Bug reproduction and root-cause discovery.
 - `test-driven-development` owns regression-test and TDD decisions.
