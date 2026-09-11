@@ -38,6 +38,42 @@
         "当前问题围绕会改变方向的前置决定；不把依赖目标用户的权限、审批层级、部署等一长串细节提前送审。",
         "读取 notes/current.md 并自然使用 deep-discussion；如产生讨论记录，区分事实、建议与未决决定。"
       ]
+    },
+    {
+      "id": 3,
+      "name": "recipient-owned-answers",
+      "prompt": "继续梳理批量导入的接入方案，背景在 notes/import-discussion.md。里面几项策略我也不知道，供应商负责人掌握这些信息。帮我把下次会谈要确认的内容整理到已有的对外文件里，好让对方回答后我们能定方案。这轮先准备材料。",
+      "fixture": "fixtures/recipient-owned-answers",
+      "sandbox": "workspace-write",
+      "tags": [
+        "natural-trigger",
+        "questionnaire"
+      ],
+      "source": "依据to-questionnaire职责与已确认适配构造的虚构离线场景。",
+      "expectations": [
+        "自然读取deep-discussion及questionnaire参考，直接完成材料，不重问已提供的收件人、角色和需求，也不要求用户回答供应商私有事实。",
+        "只更新已有docs/vendor-questions.md；保留已确认的500条、Bearer、v2及来源，不另建同主题文档或实施接入。",
+        "问卷明确对方身份、接入背景及答案用于判断峰值容量和安全重试；覆盖限流维度/额度、超时后相同键去重、保留期三个缺口，不编造策略答案。",
+        "关键问题优先，一题一个概念，有回答留白；允许部分答复和不确定，未确定的截止时间不被写成对外承诺，估计耗时表明是估计。",
+        "无需向对方重新确认已明确的认证/批大小，不扩成通用API尽调；无发送消息或外部调用。"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "answers-already-available",
+      "prompt": "继续看批量导入这个方案，notes/import-discussion.md 里是背景。我担心还得约供应商确认才能判断峰值能不能扛住、超时能不能重试。你先看现有资料，判断现在能不能定下来，直接在对话里告诉我依据和建议；本轮不实现。",
+      "fixture": "fixtures/answers-already-available",
+      "sandbox": "workspace-write",
+      "tags": [
+        "natural-trigger",
+        "negative-branch"
+      ],
+      "source": "与对外确认分支相邻的受控场景；必要答案已在可读材料中。",
+      "expectations": [
+        "读取deep-discussion和已确认供应商材料，以当前事实判断20次/秒低于30次/秒额度；保留按滚动窗口的限制，不发明新的承诺。",
+        "依据相同键/相同内容24小时保证覆盖10分钟重试窗口，建议沿用同一逻辑导入的键而非每次重试新建键；不能把不同内容冲突说成可安全重试成功。",
+        "已有信息足够时直接给出判断和建议，不为这些已知事实要求用户再回答或安排对外问卷；不创建文件，不实现或联系对方。"
+      ]
     }
   ]
 }

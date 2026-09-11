@@ -106,6 +106,23 @@
         "Constrains stories and acceptance criteria to confirmed decisions and existing contracts; preserves unresolved decisions separately.",
         "Selects evidence-based public testing boundaries without a fixed count or routine user approval; deep-discussion and wayfinder invoke this skill by name."
       ]
+    },
+    {
+      "name": "prototype",
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "path": "skills/engineering/prototype",
+      "localPath": "skills/prototype",
+      "license": "MIT",
+      "licenseFile": "skills/prototype/LICENSE.mattpocock",
+      "modifications": [
+        "Preserves the upstream SKILL.md, LOGIC.md and UI.md structure, interactive single-file logic demonstrations, and in-context UI variant comparisons.",
+        "Replaces blanket test prohibitions with direct checks proportionate to the experiment, and distinguishes model observations from real-system evidence.",
+        "Gates the complete UI experiment behind explicit development preview while preserving normal page rendering.",
+        "Records observations and actual user decisions in existing records; implementation, commits and external updates follow current task authorization.",
+        "Uses frontend-design by name within the prototype scope and existing design system.",
+        "Disables Codex implicit invocation at the user request; explicit $prototype invocation remains available. No automatic calls are added to deep-discussion or wayfinder."
+      ]
     }
   ],
   "bundledReferences": [
@@ -276,6 +293,46 @@
       "localConnections": [
         "需要构造或改进复现、缩减输入，或选择诊断实验时，读取[复现与实验方法](references/diagnostic-experiments.md)，按当前证据缺口选择方法。",
         "使用缩减复现修复后，重新验证原始完整场景；收尾时清理本次临时诊断日志和实验产物。"
+      ]
+    },
+    {
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "files": [
+        {
+          "upstream": "skills/productivity/to-questionnaire/SKILL.md",
+          "destination": "skills/deep-discussion/references/questionnaire.md",
+          "sourceSha256": "b5eb929842ee0e93d867c5e906d183d350f2f2d149eaeaa86967d94d8eda1d3b",
+          "excerpts": [
+            {
+              "startLine": 7,
+              "endLine": 9,
+              "sha256": "16831cd8db5ddb99bb30ee4ccda3fe538bf0f508589d0c45aea935d8fb1e6a5d"
+            },
+            {
+              "startLine": 18,
+              "endLine": 34,
+              "sha256": "caa784a9715a0a33b7ca7aa89431146236d76183448bccfe64f13162f00a73a6"
+            },
+            {
+              "startLine": 38,
+              "endLine": 54,
+              "sha256": "7d311e3eb577086be1e6feea7e456ce60eae88a75018de879893e03c9e695a1f"
+            }
+          ]
+        }
+      ],
+      "licenses": {
+        "deep-discussion": "skills/deep-discussion/LICENSE.mattpocock"
+      },
+      "modifications": [
+        "Preserves the upstream questionnaire workflow, recipient knowledge-gap focus, completion criteria, document structure and question example; removes standalone skill frontmatter.",
+        "Replaces only four passages: reuses known recipient context and intended outcomes instead of two mandatory interviews, follows existing document ownership, and includes deadlines only when agreed while labeling effort estimates.",
+        "Adds one local introduction for evidence reuse, sending authorization and returning answers to the discussion; the existing deep-discussion workflow owns evidence investigation and document lifecycle.",
+        "Adds a natural-language discovery branch and one on-demand resource pointer to deep-discussion; its other main-file prose and existing references remain unchanged."
+      ],
+      "localConnections": [
+        "需要向掌握信息的其他人收集答案以推进当前决定时，读取[对外确认问卷](references/questionnaire.md)，整理对方能回答的信息缺口。"
       ]
     }
   ]

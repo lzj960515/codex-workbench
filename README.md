@@ -42,7 +42,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | --- | --- |
 | [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
 | [`code-review`](skills/code-review/) | 审查候选、评估审查意见并在返工后复审，以真实交付风险推动结论收敛。 |
-| [`deep-discussion`](skills/deep-discussion/) | 依据真实证据和决策依赖推进讨论，澄清领域概念，并选择直接答复或持续文档。 |
+| [`deep-discussion`](skills/deep-discussion/) | 依据真实证据和决策依赖推进讨论，澄清领域概念，为外部信息缺口整理问卷，并选择直接答复或持续文档。 |
+| [`prototype`](skills/prototype/) | 手动使用 `$prototype`，制作可操作的逻辑模型或比较界面方案；默认不自动触发。 |
 | [`to-spec`](skills/to-spec/) | 将已有讨论和决策地图中的确认内容整理为正式规格，明确行为、验收与未决事项。 |
 | [`wayfinder`](skills/wayfinder/) | 创建和恢复跨会话决策地图，跟踪依赖、未决事项与当前可推进的问题。 |
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |
@@ -80,7 +81,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 `writing-for-agents` 的 `SKILL.md` 保留上游原文；`SKILL-MECHANICS.md` 适配本体系的自动发现偏好和平台调用设置。来源版本与修改范围记录在来源清单中，MIT 许可证随包保留。
 
-Matt Pocock 的追问与领域建模方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单，相关包保留 `LICENSE.mattpocock`。
+Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单，相关包保留 `LICENSE.mattpocock`。
 
 `to-spec` 保留上游的规格模板与原型决策表达，适配自动发现、已有文档归属、确认范围与后续动作授权；`deep-discussion` 和 `wayfinder` 在需要正式规格时按名称使用它。
 
