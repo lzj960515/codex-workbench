@@ -5,42 +5,50 @@
     {
       "name": "find-skills",
       "source": "https://github.com/vercel-labs/skills",
-      "path": "skills/find-skills"
+      "path": "skills/find-skills",
+      "scope": "archived"
     },
     {
       "name": "shadcn",
       "source": "https://github.com/shadcn/ui",
-      "path": "skills/shadcn"
+      "path": "skills/shadcn",
+      "scope": "project"
     },
     {
       "name": "ai-sdk",
       "source": "https://github.com/vercel/ai",
-      "path": "skills/use-ai-sdk"
+      "path": "skills/use-ai-sdk",
+      "scope": "project"
     },
     {
       "name": "voltagent-best-practices",
       "source": "https://github.com/voltagent/skills",
-      "path": "skills/voltagent-best-practices"
+      "path": "skills/voltagent-best-practices",
+      "scope": "project"
     },
     {
       "name": "voltagent-docs-bundle",
       "source": "https://github.com/voltagent/skills",
-      "path": "skills/voltagent-docs-bundle"
+      "path": "skills/voltagent-docs-bundle",
+      "scope": "project"
     },
     {
       "name": "ai-elements",
       "source": "https://github.com/vercel/ai-elements",
-      "path": "skills/ai-elements"
+      "path": "skills/ai-elements",
+      "scope": "project"
     },
     {
       "name": "e2b-sandbox",
       "source": "https://github.com/computesdk/sandbox-skills",
-      "path": "skills/e2b-sandbox"
+      "path": "skills/e2b-sandbox",
+      "scope": "archived"
     },
     {
       "name": "agently-mail",
       "source": "https://agent.qq.com/.well-known/skills/agently-mail/SKILL.md",
-      "path": "SKILL.md"
+      "path": "SKILL.md",
+      "scope": "archived"
     }
   ],
   "relatedProjects": [
@@ -66,6 +74,209 @@
         "xlsx"
       ],
       "note": "Obtain these Skills from their official distribution and follow the upstream license. Their implementation is not copied here."
+    }
+  ],
+  "bundledSkills": [
+    {
+      "name": "writing-for-agents",
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "path": "skills/productivity/writing-for-agents",
+      "localPath": "skills/writing-for-agents",
+      "license": "MIT",
+      "licenseFile": "skills/writing-for-agents/LICENSE",
+      "modifications": [
+        "SKILL.md is preserved byte-for-byte from upstream.",
+        "SKILL-MECHANICS.md defaults to natural-language discovery, distinguishes Claude and Codex invocation settings, and reserves manual routing for explicitly requested workflows.",
+        "agents/openai.yaml adds a default prompt and explicitly enables implicit invocation."
+      ]
+    },
+    {
+      "name": "to-spec",
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "path": "skills/engineering/to-spec",
+      "localPath": "skills/to-spec",
+      "license": "MIT",
+      "licenseFile": "skills/to-spec/LICENSE.mattpocock",
+      "modifications": [
+        "Preserves the seven-section specification template, implementation-decision categories, and prototype decision snippets.",
+        "Enables natural-language invocation and creation or revision from existing conversations and linked decision records.",
+        "Uses existing document ownership and explicit draft status instead of setup dependencies, automatic tracker publication, or ready-for-agent labels.",
+        "Constrains stories and acceptance criteria to confirmed decisions and existing contracts; preserves unresolved decisions separately.",
+        "Selects evidence-based public testing boundaries without a fixed count or routine user approval; deep-discussion and wayfinder invoke this skill by name."
+      ]
+    }
+  ],
+  "bundledReferences": [
+    {
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "files": [
+        {
+          "upstream": "skills/productivity/grilling/SKILL.md",
+          "destination": "skills/deep-discussion/references/grilling.md"
+        },
+        {
+          "upstream": "skills/engineering/domain-modeling/SKILL.md",
+          "destination": "skills/deep-discussion/references/domain-modeling.md"
+        },
+        {
+          "upstream": "skills/engineering/domain-modeling/CONTEXT-FORMAT.md",
+          "destination": "skills/deep-discussion/references/CONTEXT-FORMAT.md"
+        },
+        {
+          "upstream": "skills/engineering/domain-modeling/ADR-FORMAT.md",
+          "destination": "skills/deep-discussion/references/ADR-FORMAT.md"
+        },
+        {
+          "upstream": "skills/engineering/codebase-design/SKILL.md",
+          "destination": "skills/architecture-design-review/references/codebase-design.md"
+        },
+        {
+          "upstream": "skills/engineering/codebase-design/DEEPENING.md",
+          "destination": "skills/architecture-design-review/references/DEEPENING.md"
+        },
+        {
+          "upstream": "skills/engineering/codebase-design/DESIGN-IT-TWICE.md",
+          "destination": "skills/architecture-design-review/references/DESIGN-IT-TWICE.md"
+        },
+        {
+          "upstream": "skills/engineering/wayfinder/SKILL.md",
+          "destination": "skills/wayfinder/SKILL.md"
+        },
+        {
+          "upstream": "skills/engineering/improve-codebase-architecture/SKILL.md",
+          "destination": "skills/improve-codebase-architecture/SKILL.md"
+        },
+        {
+          "upstream": "skills/engineering/improve-codebase-architecture/HTML-REPORT.md",
+          "destination": "skills/improve-codebase-architecture/HTML-REPORT.md"
+        },
+        {
+          "upstream": "skills/engineering/setup-matt-pocock-skills/issue-tracker-local.md",
+          "destination": "skills/wayfinder/references/local-tracker.md"
+        }
+      ],
+      "licenses": {
+        "deep-discussion": "skills/deep-discussion/LICENSE.mattpocock",
+        "architecture-design-review": "skills/architecture-design-review/LICENSE.mattpocock",
+        "wayfinder": "skills/wayfinder/LICENSE.mattpocock",
+        "improve-codebase-architecture": "skills/improve-codebase-architecture/LICENSE.mattpocock"
+      },
+      "modifications": [
+        "Grilling and domain modeling become references of deep-discussion, with existing document ownership and collaboration rules.",
+        "Codebase design becomes a shared architecture reference, with evidence-based abstraction and test-retention decisions.",
+        "Wayfinder and architecture scanning support implicit invocation, existing tools, local records, and current authorization.",
+        "Local tracker is a local adaptation of the upstream local Markdown tracker; metadata and owner-skill integration are local.",
+        "Named skill invocation replaces installation-path references; substantial independent investigation and design alternatives retain sub-agent workflows with bounded briefs and lead verification. The setup skill is not installed or required."
+      ]
+    },
+    {
+      "source": "https://github.com/mattpocock/skills",
+      "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
+      "files": [
+        {
+          "upstream": "skills/engineering/diagnosing-bugs/SKILL.md",
+          "destination": "skills/systematic-debugging/references/diagnostic-experiments.md",
+          "sourceSha256": "77f3cf31bc99b2f49af943222526531fcc9fc41d047626d3640e875e85af3e84",
+          "excerpts": [
+            {
+              "startLine": 12,
+              "endLine": 14,
+              "sha256": "d2dc6977727c9c1d5be22c22c10dc83fd4a4bd2ff90b5ed2ebf5f3155da8f455"
+            },
+            {
+              "startLine": 18,
+              "endLine": 18,
+              "sha256": "5b83cb1a26ff7533ac1320ec3dff378822b95bad6a424a43624f2ddf977451dd"
+            },
+            {
+              "startLine": 24,
+              "endLine": 31,
+              "sha256": "d4385b02d3f834b9b0c8e39d8a0a4c30aca42a1a07c375f6ff399c112c5d9fe7"
+            },
+            {
+              "startLine": 33,
+              "endLine": 34,
+              "sha256": "6e123165288e0b4659f1a5e884040229eda0a6118a090b21ce86dbd77f0ced86"
+            },
+            {
+              "startLine": 39,
+              "endLine": 47,
+              "sha256": "1b1897c4a39e95c454185735c1f997e36ccca631dbdbb9f54666d81d5509cac1"
+            },
+            {
+              "startLine": 68,
+              "endLine": 76,
+              "sha256": "a0f9e0f7a555bc564aa192070f66df317a4fd38533a4e09511182f73fc9cbbaa"
+            },
+            {
+              "startLine": 78,
+              "endLine": 82,
+              "sha256": "aab1934311947a6d81e1e4b4465bda467512cfcb4149559e7f5c57cb38ad2b02"
+            },
+            {
+              "startLine": 88,
+              "endLine": 88,
+              "sha256": "f9957a101372581043a5f632eb0d039e4f7ea49f84673606b5ce72c2721b887f"
+            },
+            {
+              "startLine": 92,
+              "endLine": 96,
+              "sha256": "11c5d3ed99d46b5175f020b67e6cfa0d0ddd09d494eaf6352a9a57e2427cb905"
+            },
+            {
+              "startLine": 100,
+              "endLine": 100,
+              "sha256": "3f458f4364866f7c002a3e347fc7d63e4de834011bb5e342cd4dbc14e8569936"
+            },
+            {
+              "startLine": 104,
+              "endLine": 110,
+              "sha256": "cd06d2233f501f05e29f5626e1062b4dd51dec8663491aeda8906290f4591934"
+            },
+            {
+              "startLine": 114,
+              "endLine": 114,
+              "sha256": "74bf240c736ac3bd4415d45fec6303629302b11f389246614c0cc70781bdab64"
+            },
+            {
+              "startLine": 118,
+              "endLine": 118,
+              "sha256": "7c08edfb7895504623cde9d56a6146f909ac3a02bf52e609da96aaadcc0069ce"
+            },
+            {
+              "startLine": 128,
+              "endLine": 128,
+              "sha256": "4b641050b3bbfd78025188f0e6573d883ada3e0abff8a95a5f225cfb73174e39"
+            },
+            {
+              "startLine": 130,
+              "endLine": 130,
+              "sha256": "034eaa2edeccb33b92406a404b0e072f5edde8994eea4ac16ae927233dafd77a"
+            },
+            {
+              "startLine": 136,
+              "endLine": 137,
+              "sha256": "f13f7990dc0f4245606822f965eefe510d5c51e0296bc5beb6b1a0ef80fbf016"
+            }
+          ]
+        }
+      ],
+      "licenses": {
+        "systematic-debugging": "skills/systematic-debugging/LICENSE.mattpocock"
+      },
+      "modifications": [
+        "Preserves selected upstream reproduction, minimization, falsifiable-hypothesis, instrumentation, regression-seam and cleanup passages verbatim, including original headings and numbering.",
+        "Adds a local reference introduction; the existing systematic-debugging workflow owns task order, authorization and stopping conditions.",
+        "Keeps all existing main Skill prose and adds only two connective sentences: on-demand experiment-method reference and original-scenario verification with temporary diagnostic cleanup.",
+        "Omits mandatory reproduction gates, fixed experiment and hypothesis counts, routine user checkpoints, the HITL script dependency, and duplicate TDD or commit orchestration."
+      ],
+      "localConnections": [
+        "需要构造或改进复现、缩减输入，或选择诊断实验时，读取[复现与实验方法](references/diagnostic-experiments.md)，按当前证据缺口选择方法。",
+        "使用缩减复现修复后，重新验证原始完整场景；收尾时清理本次临时诊断日志和实验产物。"
+      ]
     }
   ]
 }

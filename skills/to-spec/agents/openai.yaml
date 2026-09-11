@@ -1,0 +1,6 @@
+interface:
+  display_name: "To Spec"
+  short_description: "Turn agreed decisions into an implementation spec"
+  default_prompt: "Use $to-spec to turn our established decisions into a formal specification."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,32 @@
+[
+  {
+    "batch_id": "batch-a",
+    "item_id": "item-1",
+    "trace_id": "trace-0",
+    "label": "archived upload"
+  },
+  {
+    "batch_id": "batch-a",
+    "item_id": "item-2",
+    "trace_id": "trace-1",
+    "label": "archived upload"
+  },
+  {
+    "batch_id": "batch-a",
+    "item_id": "item-1",
+    "trace_id": "trace-2",
+    "label": "archived upload"
+  },
+  {
+    "batch_id": "batch-a",
+    "item_id": "item-3",
+    "trace_id": "trace-3",
+    "label": "archived upload"
+  },
+  {
+    "batch_id": "batch-a",
+    "item_id": "item-2",
+    "trace_id": "trace-4",
+    "label": "archived upload"
+  }
+]

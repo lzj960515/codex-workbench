@@ -1,0 +1,43 @@
+{
+  "skill_name": "deep-discussion",
+  "evals": [
+    {
+      "id": 1,
+      "name": "resume-decisions",
+      "prompt": "继续我们上次的账单导出讨论，确认记录在 decisions/export.md。把现有讨论稿收敛好，告诉我接下来从哪里开始。这轮先把方案整理好。",
+      "fixture": "fixtures/resume-decisions",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "更新已有 docs/export-discussion.md，保留确认来源，清理已解决的未决问题并给出可继续执行的下一步。",
+      "expectations": [
+        "更新已有 docs/export-discussion.md，保留确认来源，清理已解决的未决问题并给出可继续执行的下一步。",
+        "保持当前页、列与顺序、点击时数据、空页表头、转义及加载失败的已确认行为；全量、后台和历史保持范围外。",
+        "不要求重新决定已确认事项；常规文案、命名等细节自行选择或留给实施，不构成再次审批。",
+        "不实现导出功能；不建立与现有讨论稿竞争的同主题方案；自然选择并读取 deep-discussion。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "unsettled-goal",
+      "prompt": "我想把现在的 AI 费用脚本做成一个更好用的工具。自己看账单肯定有用，给团队报销、审批、按部门看报表感觉也不错，但我还没想好先服务谁。现状在 notes/current.md。你帮我想清楚应该怎么起步，先讨论方向。",
+      "fixture": "fixtures/unsettled-goal",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "基于现状比较起步方向，提出有理由的推荐；把先服务个人还是团队保留为需要用户确认的关键目标。",
+      "expectations": [
+        "基于现状比较起步方向，提出有理由的推荐；把先服务个人还是团队保留为需要用户确认的关键目标。",
+        "报销、审批、部门报表保持候选，未被写成已确认本期要求，也没有开始实现。",
+        "当前问题围绕会改变方向的前置决定；不把依赖目标用户的权限、审批层级、部署等一长串细节提前送审。",
+        "读取 notes/current.md 并自然使用 deep-discussion；如产生讨论记录，区分事实、建议与未决决定。"
+      ]
+    }
+  ]
+}

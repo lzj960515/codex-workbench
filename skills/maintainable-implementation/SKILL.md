@@ -69,7 +69,7 @@ Refactor the relevant boundary when current structure would otherwise create one
 
 Keep the change local when the existing owner is stable, the new behavior fits its vocabulary, and extraction would only rename a few lines without isolating variation or side effects.
 
-Refactor the smallest complete boundary that restores ownership. A known next phase can justify a stable responsibility seam, while its future behavior, runtime state, and extension mechanism remain outside the current implementation until required.
+Refactor the smallest complete boundary that restores ownership. When choosing the new module interface or where dependencies can vary, read [Codebase Design](../architecture-design-review/references/codebase-design.md). A known next phase can justify a stable responsibility seam, while its future behavior, runtime state, and extension mechanism remain outside the current implementation until required.
 
 Split by responsibility, lifecycle, or independently meaningful failure behavior rather than by the number of code steps. Internal helpers can improve readability without becoming new domain objects, persistent states, Queue jobs, or framework stages.
 

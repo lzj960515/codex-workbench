@@ -1,0 +1,43 @@
+{
+  "skill_name": "architecture-design-review",
+  "evals": [
+    {
+      "id": 1,
+      "name": "shared-request-state",
+      "prompt": "从架构上帮我看看这个 ReportEngine：共享实例并发生成报告时 request_id 串了。是不是给 config 加个 busy 标志或者锁就行？请结合代码判断状态该归谁，给出保持现有调用方式的设计建议，这轮先不改代码。",
+      "fixture": "fixtures/shared-request-state",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "依据engine.py与可复现交错解释：A挂起、B覆盖共享config.request_id、A返回B标识；准确识别定义期配置与调用期状态混用。",
+      "expectations": [
+        "依据engine.py与可复现交错解释：A挂起、B覆盖共享config.request_id、A返回B标识；准确识别定义期配置与调用期状态混用。",
+        "推荐把request_id保留在每次调用的局部数据或独立上下文，template保留配置职责；接口继续支持并发 render(request_id)。",
+        "解释锁或busy标志不能代替所有权修复且可能破坏并发契约；不把队列、持久化、恢复或新框架作为本期必需建设。",
+        "自然读取 architecture-design-review，结论具有源码依据；只交付设计判断，不修改现有代码。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "retain-valid-seam",
+      "prompt": "帮我从架构师角度审视 BillingReport 和 Ledger 这个接口。只有一个生产实现，是不是抽象过度了，直接在报表里读 CSV 会更简单？请独立判断，给我最佳建议，这轮只讨论，不改代码。",
+      "fixture": "fixtures/retain-valid-seam",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "依据实际调用方与MemoryLedger测试判断当前账单读取边界有实际职责；不因只有一个生产实现就主张将CSV读取塞进报表。",
+      "expectations": [
+        "依据实际调用方与MemoryLedger测试判断当前账单读取边界有实际职责；不因只有一个生产实现就主张将CSV读取塞进报表。",
+        "说明读取/解析与金额汇总的变化、错误边界，以及现有测试替身如何支持接口价值；承认可选表达改进，不强制固定类名或模式。",
+        "建议保持与当前任务相称的结构，不新增工厂、插件、缓存、重试或未要求的持久化机制；既有合理设计可直接接受。",
+        "自然读取 architecture-design-review，依据完整相关代码与测试作判断；只讨论，文件保持不变。"
+      ]
+    }
+  ]
+}

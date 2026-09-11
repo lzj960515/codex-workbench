@@ -1,0 +1,43 @@
+{
+  "skill_name": "maintainable-implementation",
+  "evals": [
+    {
+      "id": 1,
+      "name": "mechanical-header",
+      "prompt": "把 headers.py 中 build_headers 返回的 Request-Id 改成 X-Request-Id，值和其他行为不变，直接做好就行。",
+      "fixture": "fixtures/mechanical-header",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "经 cli.response_metadata 取得新键和值，旧键移除，Content-Type不变。",
+      "expectations": [
+        "经 cli.response_metadata 取得新键和值，旧键移除，Content-Type不变。",
+        "实现保持现有局部映射，没有新增配置、抽象类、兼容键或与任务无关的业务机制。",
+        "执行能直接证明映射正确的检查；不新建仅复述键值赋值的测试或发起行为模型评估，也不产生业务图谱维护。",
+        "不反复要求批准常规实现细节；允许不加载 maintainable-implementation，或读取后走机械修改分支。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "cancellation-owner",
+      "prompt": "导出任务取消现在要支持 queued 状态。web 和 CLI 都要生效，其他状态和错误语义沿用 README.md。顺便把两处相同的取消业务规则整理到合适的位置，直接实现并验证。",
+      "fixture": "fixtures/cancellation-owner",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "两个既有入口都允许pending/queued取消、返回并保存cancelled且只保存一次；running/completed/cancelled拒绝且不保存。",
+      "expectations": [
+        "两个既有入口都允许pending/queued取消、返回并保存cancelled且只保存一次；running/completed/cancelled拒绝且不保存。",
+        "取消业务流程与状态规则由一个共享的业务所有者完整承载，两个入口复用它；不只复制条件或新增共享常量掩盖流程重复。",
+        "缺失任务和保存失败仍传播，无新队列、状态库、重试、插件注册或其他未要求的运行机制。",
+        "新增有区分度的行为回归保护并运行相关测试，实际读取 maintainable-implementation；没有以仅口头说明代替实施。"
+      ]
+    }
+  ]
+}

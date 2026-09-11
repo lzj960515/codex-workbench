@@ -1,0 +1,43 @@
+{
+  "skill_name": "code-review",
+  "evals": [
+    {
+      "id": 1,
+      "name": "approve-valid-refactor",
+      "prompt": "请审查 before/ 到 after/ 的改动，看这个候选能不能合入。需求和入口说明在 README.md。只给审查结论，这轮不要修改实现。",
+      "fixture": "fixtures/approve-valid-refactor",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "明确批准这个等价改动，依据受支持入口与实际差异作出判断。",
+      "expectations": [
+        "明确批准这个等价改动，依据受支持入口与实际差异作出判断。",
+        "核实 parse_settings 到 run 的调用契约；不把绕过入口直接给 _retry_limit 传非法值作为合入阻塞。",
+        "审查范围内没有捏造新缺陷，验证声明与实际工具记录一致；不修改 before/、after/ 实现和测试。",
+        "自然选择并读取 code-review。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "tenant-isolation-regression",
+      "prompt": "帮我审查 before/ 到 after/ 的查询优化，现有测试是绿的，看看是否适合合入。README.md 有接口背景。这轮只审查。",
+      "fixture": "fixtures/tenant-isolation-regression",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "判定候选需要修改，指出新索引查询遗漏店铺隔离，属于当前改动引入的真实阻塞。",
+      "expectations": [
+        "判定候选需要修改，指出新索引查询遗漏店铺隔离，属于当前改动引入的真实阻塞。",
+        "给出受支持入口的具体场景：store-a 查询 note-2，经 handle_request 和 get_note 读到 store-b 私密内容；说明基线应返回404。",
+        "以实际代码链或运行结果支持结论，并指出现有同店/不存在测试不能覆盖跨店查询；只审查、不修复实现。",
+        "自然选择并读取 code-review。"
+      ]
+    }
+  ]
+}

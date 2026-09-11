@@ -1,0 +1,6 @@
+2026-09-08T01:00:00Z run=r100 start
+2026-09-08T01:00:13Z run=r100 completed count=24
+2026-09-08T02:00:00Z run=r101 start
+2026-09-08T02:00:11Z run=r101 completed count=0
+2026-09-08T03:00:00Z run=r102 start
+2026-09-08T03:00:12Z run=r102 completed count=24

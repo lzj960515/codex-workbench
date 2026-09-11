@@ -1,0 +1,7 @@
+interface:
+  display_name: "Improve Codebase Architecture"
+  short_description: "Find and compare worthwhile refactors"
+  default_prompt: "Use $improve-codebase-architecture to find the most worthwhile refactoring opportunities."
+
+policy:
+  allow_implicit_invocation: true

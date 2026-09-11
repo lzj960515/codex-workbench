@@ -1,0 +1,26 @@
+{
+  "skill_name": "skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "wording-only",
+      "prompt": "请把 skills/cost-summary/SKILL.md 正文里的错字“费拥”改成“费用”，其他内容保持原样。",
+      "fixture": "fixtures/wording-only",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "evaluation-cost"
+      ],
+      "source": "User observed excessive evaluation sessions after small prompt edits.",
+      "expected_output": "只修正错字并核对差异，使用与语义不变改动相称的轻量验证。",
+      "expectations": [
+        "只改指定错字，保留description和其余正文。",
+        "不启动新Codex评估会话或子Agent，不创建候选快照或评估目录。",
+        "不把完成校对描述成经过模型效果评测或质量提升。"
+      ],
+      "fixture_renames": {
+        "skills/cost-summary/SKILL.md.fixture": "skills/cost-summary/SKILL.md"
+      }
+    }
+  ]
+}

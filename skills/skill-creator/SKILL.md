@@ -71,7 +71,7 @@ skill-name/
 3. 确定安装范围：项目专用放仓库 `.agents/skills`，个人跨项目能力放 `~/.agents/skills`，产品内置或插件 Skill 按对应平台管理。
 4. 识别需要保留的现有行为、脚本、参考资料和跨平台兼容性。
 5. 判断该 Skill 主要提供判断还是确定性操作。判断型 Skill 核对默认偏差、优化结果、关键取舍和停止条件；操作型 Skill 核对权限、输入输出、副作用和失败边界。
-6. 没有 Skill Brief 时，从用户请求和现有行为提取最小验收场景：机械修改至少 1 个，行为变化使用 2-5 个；为每个场景写明输入、预期可观察结果和失败表现。判断型 Skill 至少包含一个正确结果是停止、不修改或不产出额外事项的对照场景。
+6. 从用户请求、实际差异和已有用例明确本次要保护的行为，再按“校验与测试”选择最低充分验证。语义不变的校对用差异复核；行为变化选择能暴露目标问题的场景，并在涉及判断或触发边界时覆盖正确停止或不触发的情况。
 
 同名 Skill 不会自动合并。需要一个权威版本时，保留可维护的来源，并使用平台支持的配置禁用其他版本。
 
@@ -116,6 +116,8 @@ compatibility: 运行 Skill 所需的跨平台环境、工具或依赖约束（�
 
 ### 5. 编写正文与资源
 
+编写或修改正文前，使用 `writing-for-agents` Skill，应用其中的信息组织与写作方法。以已有设计意图、行为契约和验收要求约束修改；保留原有有效表达，只调整当前目标需要改变的部分。
+
 正文使用任务所需的自然结构，例如工作流、任务分类、能力分类或参考规范。使用命令式、正向且可判断的指令：
 
 - 先写最重要的决策和执行顺序。
@@ -143,19 +145,28 @@ python3 <skill-creator>/scripts/generate_openai_yaml.py \
 
 ### 7. 校验与测试
 
-每次修改至少运行静态校验：
+按行为差异和错误后果选择验证力度，而不是按修改字数、文件数或 Skill 名称打分。一个“可以”改成“必须”可能改变执行策略；整段措辞调整也可能保持原有语义。
+
+| 当前变化与要回答的问题 | 最低充分验证 |
+| --- | --- |
+| 错字、标点、排版，含义与触发条件保持原样 | 校对完整差异；涉及 frontmatter、路径或资源结构时加解析与引用检查，完成后交付 |
+| 可由程序直接证明的脚本或资源变化 | 运行相关单测或代表性调用；Agent 的选择也发生变化时，再覆盖该分支 |
+| 新增能力，或改变触发、授权、停止条件、工作顺序、输出契约和 Skill 协作 | 选择受影响的自然任务，在新上下文中检查实际动作和产物；通常从 1–3 个相关场景起步，数量服从真实分支 |
+| 判断新版是否更好，较大重构、共享职责变化，或高风险行为边界发生变化 | 在相同环境和初态下比较旧版与候选；结果波动且会改变采用决定时，再增加重复试验或未参与调优的案例 |
+
+新包或结构变化运行：
 
 ```bash
 python3 <skill-creator>/scripts/quick_validate.py <skill-directory>
 ```
 
-然后按行为风险选择验证层级：
+需要新上下文测试时，读取 [评估设计与用例维护](references/evaluation-design.md)；在 Codex 执行时再读取 [Codex 评估工具](references/codex-evaluation.md)，复用其中的运行脚本。开始前简短说明本轮场景和预计会话数，完成后集中汇报；测试完成通知可能仍由用户现有环境触发。
 
-1. **静态层**：frontmatter、名称、文件引用、脚本语法和代表性脚本执行。适用于路径、措辞和机械修改。
-2. **Fresh Agent 层**：使用 2-5 个真实问题验证触发、工具选择、答案质量和失败表达，记录预期与实际结果；判断型 Skill 同时覆盖它要纠正的默认偏差和一个正确停止的对照场景。修正后重跑受影响场景和关键回归场景。适用于新 Skill 和行为变化。
-3. **高级评测层**：保留旧版基线，运行 with-skill/baseline、客观断言、benchmark、人工 Viewer、盲测或 description optimization。适用于团队级公共 Skill、高风险工作流、难以凭单次结果判断的改动，或用户明确要求证明没有退步。
+比较旧版、重复试验或主观质量评审时，按需读取 [高级评测](references/advanced-evaluation.md)，复用已有 grader、benchmark 和 Viewer。保留每次实际结果，区分执行失败、行为退步和无法判断；一次通过只证明该次场景，不能据此宣称新版整体更好。
 
-高级评测不是默认仪式。需要时完整读取 `references/advanced-evaluation.md`，其中保留原 Claude Skill Creator 的评测、Viewer、grader 和优化能力。
+为常用、影响大或已有真实失误的 Skill 在 `evals/` 保存可复用的请求、脱敏初态和行为标准。运行日志、候选副本及评分输出放任务 `tmp/`。优先复用已有案例，只为新故障或真实职责缺口补例；判定标准来自用户目标与既有契约，修改 Skill 时保持标准独立。
+
+当目标问题已有直接证据、受影响的关键边界通过检查且剩余不确定性不改变当前决定时，结束验证。新增差异、真实失败或未解决的重要疑点才触发下一轮。
 
 ### 8. 审查与交付
 
@@ -185,6 +196,9 @@ python3 <skill-creator>/scripts/package_skill.py <skill-directory>
 - `scripts/quick_validate.py`：校验 frontmatter 和命名。
 - `scripts/package_skill.py`：生成可安装的 Skill 包。
 - `references/openai_yaml.md`：Codex metadata 字段和约束。
+- `scripts/codex_skill_eval.py`：快照实际 Skill 目录，在新 Codex 上下文运行单个用例并保存发现、执行和产物证据。
+- `references/evaluation-design.md`：行为评估的范围、用例、评分和长期维护。
+- `references/codex-evaluation.md`：Codex 本地用例、候选/基线快照与运行工具用法。
 - `references/advanced-evaluation.md`：可选的基线、benchmark、Viewer、盲测和触发优化流程。
 - `references/schemas.md`：高级评测 JSON 结构。
 - `agents/grader.md`、`agents/comparator.md`、`agents/analyzer.md`：高级评测角色标准。

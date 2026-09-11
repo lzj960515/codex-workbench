@@ -1,0 +1,7 @@
+interface:
+  display_name: "Wayfinder"
+  short_description: "Track dependent decisions across sessions"
+  default_prompt: "Use $wayfinder to map this effort and identify the next decision."
+
+policy:
+  allow_implicit_invocation: true

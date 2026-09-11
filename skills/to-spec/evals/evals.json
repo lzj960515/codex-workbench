@@ -1,0 +1,58 @@
+{
+  "skill_name": "to-spec",
+  "evals": [
+    {
+      "id": 1,
+      "name": "existing-spec",
+      "prompt": "导出功能已经讨论好了，决定见 decisions/export.md。请把这些决定整理成供后续开发和验收使用的正式规格，更新项目已有的文档。这次做到文档交付即可。",
+      "fixture": "fixtures/existing-spec",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "contract"
+      ],
+      "source": "2026-09-10 to-spec introduction; initial fresh-context scenario passed once, not a repeated stability claim.",
+      "expected_output": "更新 docs/export-spec.md 而非新建重复规格；其余任务文件不变。",
+      "expectations": [
+        "更新 docs/export-spec.md 而非新建重复规格；其余任务文件不变。",
+        "仅把已确认当前页CSV行为形成要求，包含列、顺序、空页和读取失败规则；全量、历史、后台作业仍范围外。",
+        "按自然请求实际读取 to-spec；保留来源依据，常规测试边界不要求用户重复确认。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "map-gaps",
+      "prompt": "请把 plans/jobs/map.md 里目前的决定整理为后续实施用的规格草稿。已经决定的直接整理；没有决定的保持待定，我们下一轮再谈。",
+      "fixture": "fixtures/map-gaps",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "contract"
+      ],
+      "source": "2026-09-10 to-spec introduction; initial fresh-context scenario passed once, not a repeated stability claim.",
+      "expected_output": "读取地图链接的决策详情；暂停只阻止新步骤，已运行步骤结束，恢复再领取，暂停不取消或退款。",
+      "expectations": [
+        "读取地图链接的决策详情；暂停只阻止新步骤，已运行步骤结束，恢复再领取，暂停不取消或退款。",
+        "取消两种方案保持待定，通知范围外；没有臆造模块、API或测试框架。",
+        "只在 docs/specs/ 创建草稿；地图与决策状态不变，不开始实现或发布。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "small-change",
+      "prompt": "把 config.json 里的 pollSeconds 从 30 改成 45，其他值不变。",
+      "fixture": "fixtures/small-change",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "trigger"
+      ],
+      "source": "2026-09-10 to-spec introduction; initial fresh-context scenario passed once, not a repeated stability claim.",
+      "expected_output": "仅将 pollSeconds 从30改45，maxItems及其余文件保持原样。",
+      "expectations": [
+        "仅将 pollSeconds 从30改45，maxItems及其余文件保持原样。",
+        "不调用 to-spec/deep-discussion/wayfinder，不创建规格或委派子任务。"
+      ]
+    }
+  ]
+}

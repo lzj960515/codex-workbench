@@ -1,12 +1,12 @@
 # Advanced Skill Evaluation
 
-本流程用于证明高风险、团队级或复杂 Skill 的新版本没有退步。普通文案、路径或小范围调整使用静态校验和少量 Fresh Agent 场景即可。
+本流程用于比较候选与基线，判断已覆盖场景中的改善、退步和不确定性。验证力度由 SKILL.md 的“校验与测试”决定；语义不变的校对在差异复核后完成。用例与评分原则见 [评估设计](evaluation-design.md)。
 
 ## 适用条件
 
 满足任一条件时考虑高级评测：
 
-- Skill 会执行生产运维、数据库、安全、发布或其他高风险操作。
+- 修改影响生产运维、数据库、安全、发布或其他高风险操作的行为边界。
 - 多个团队或 Agent 依赖稳定的输出契约。
 - 修改前后差异难以通过单个样例判断。
 - description 的误触发或漏触发会造成明显成本。
@@ -57,7 +57,7 @@
 
 ## 3. 同轮运行新版与基线
 
-在能够启动独立 Agent 时，同一轮并行运行。新 Skill 使用：
+每次试验使用独立初态和新上下文，按工作量选择顺序或并行运行；比较两端保持模型、推理强度、工具、全局规则与输入一致。Codex 使用 [本地评估工具](codex-evaluation.md)，核对实际发现目录与包摘要。新 Skill 使用：
 
 - `with_skill`：加载当前 Skill。
 - `without_skill`：不加载该 Skill。
@@ -87,7 +87,7 @@ iteration-1/
             └── timing.json
 ```
 
-每次重复执行使用独立的 `run-2`、`run-3`。更新已有 Skill 时把目录名替换为 `new_skill` 和 `old_skill`。`timing.json` 保存可用的 `total_tokens`、`duration_ms` 和换算后的秒数。时间和 token 用于发现成本变化，不单独决定质量高低。
+先运行足以检查目标变化的案例；需要判断稳定性或存在会改变决定的结果波动时，再增加重复试验。每次重复执行使用独立的 `run-2`、`run-3`。更新已有 Skill 时把目录名替换为 `new_skill` 和 `old_skill`。`timing.json` 保存可用的 `total_tokens`、`duration_ms` 和换算后的秒数。时间和 token 用于发现成本变化，不单独决定质量高低。
 
 每个 `eval-<name>/eval_metadata.json` 使用 `schemas.md` 中的统一契约，保存稳定的 `eval_id`、用于 Viewer 的 `eval_name` 和原始 `prompt`。聚合器与 Viewer 都从该 eval 根目录读取同一份 metadata。
 
@@ -106,6 +106,8 @@ iteration-1/
   ]
 }
 ```
+
+执行不完整或评分证据不足的试验先标为未完成或无法判断，补足记录后再加入评分汇总；Agent 完成不等于断言通过。
 
 汇总 benchmark：
 
@@ -169,10 +171,10 @@ python3 <skill-creator>/eval-viewer/generate_review.py \
 
 ## 8. 平台适配
 
-- 有独立 Agent 时并行运行新版与基线，保证比较互不污染。
+- 新版与基线使用独立上下文和初态；仅在独立并行有收益时并行运行。
 - 没有独立 Agent 时顺序执行代表性任务并加强人工 Review；明确说明结果不是独立基线，不宣称统计非劣。
 - 没有 GUI 时使用 Viewer 的 `--static` 模式，或在对话中逐项呈现 Prompt、输出和评价结果。
-- `run_loop.py` 等依赖 `claude -p` 的脚本只在 Claude CLI 可用时执行；Codex 使用当前平台的 Fresh Agent 和输出采集能力完成等价评测。
+- `run_loop.py` 等依赖 `claude -p` 的脚本只在 Claude CLI 可用时执行；Codex 使用 `scripts/codex_skill_eval.py` 采集实际调用和产物，按同一行为标准评分，并记录平台差异。
 - 已安装目录只读时，保留原始名称并复制到临时 workspace 修改、验证和打包。
 
 ## 9. 迭代停止条件

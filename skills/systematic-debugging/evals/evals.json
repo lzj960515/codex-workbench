@@ -1,0 +1,62 @@
+{
+  "skill_name": "systematic-debugging",
+  "evals": [
+    {
+      "id": 1,
+      "name": "wrong-environment",
+      "prompt": "这个任务一直404，重试三次也没用，我怀疑重试逻辑写错了。README.md 里是本地重放方法，帮我诊断一下，这轮先别改代码或配置。",
+      "fixture": "fixtures/wrong-environment",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "在本地重放范围确认环境错配：生产事件 job-42 被 sandbox 配置查询，生产快照含记录而 sandbox 不含。",
+      "expectations": [
+        "在本地重放范围确认环境错配：生产事件 job-42 被 sandbox 配置查询，生产快照含记录而 sandbox 不含。",
+        "使用配置、事件和数据建立因果链，并通过只覆盖环境的重放对照区分环境选择与重试逻辑；未把增加重试当根因修复。",
+        "保持代码与配置不变，给出环境对齐的修正方向；结论没有冒称已验证或修复真实线上。",
+        "自然选择并读取 systematic-debugging。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "insufficient-incident-evidence",
+      "prompt": "昨晚偶发漏了一批内容，现在又恢复了，是不是 Redis 丢数据？归档资料都在这里，你先帮我定位，先别改东西。",
+      "fixture": "fixtures/insufficient-incident-evidence",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "给出证据不足或明确受限的主要假设；没有把 Redis 丢数据或其他猜测确认为根因。",
+      "expectations": [
+        "给出证据不足或明确受限的主要假设；没有把 Redis 丢数据或其他猜测确认为根因。",
+        "区分日志已知的最终0条、业务方反馈和未取得的阶段证据，说明至少两个仍无法区分的合理解释。",
+        "提出能够区分假设的具体下一项证据，如同一轮上游/过滤/入队/消费的数量和关联记录，而非泛泛要求更多日志。",
+        "没有修改任务材料、编造工具检查、连接线上或声称已修复；自然选择并读取 systematic-debugging。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "captured-batch-replay",
+      "prompt": "归档里这批上传明明有3个独立条目，接收结果却只有1条，还没有现成复现脚本。帮我从这些材料建立可重复检查，缩小触发问题的输入并定位原因。这次只调查，源码和归档保持原样；可以在 tmp/ 留下之后能重跑的诊断脚本。",
+      "fixture": "fixtures/captured-batch-replay",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression-seed",
+        "reproduction"
+      ],
+      "source": "根据复现方法引入目标构造的虚构本地归档，不是真实线上事故。",
+      "expected_output": "可运行的诊断脚本实际调用receiver.accept，并能识别归档中3条变1条的错误；找到最小触发输入与去重键根因。",
+      "expectations": [
+        "诊断脚本实际调用receiver.accept，用expected.json或独立业务例子的期望作断言，运行时正确报告目标故障，不以不崩溃代替结果检查。",
+        "通过运行缩减输入验证同批两个不同item即会丢项；区分同item重传的合法去重与不同item被误去重。",
+        "根因定位为按batch_id去重而非批内item身份；结论有实际源码和原始/缩减重放依据，不根据trace_id或label捏造原因。",
+        "源码、完整归档与expected.json保持不变；诊断产物位于tmp并能重跑，没有访问外部服务或声称线上已修复。"
+      ]
+    }
+  ]
+}
