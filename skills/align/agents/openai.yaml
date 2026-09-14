@@ -1,0 +1,7 @@
+interface:
+  display_name: "Align · 理解对齐"
+  short_description: "对齐我的意思和期望的处理程度，理解了就简短确认，有疑问就提问"
+  default_prompt: "请用 $align 对齐我当前表达的意思，理解了就简短确认，有疑问就向我提问。"
+
+policy:
+  allow_implicit_invocation: false

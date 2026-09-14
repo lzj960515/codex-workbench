@@ -1,0 +1,7 @@
+interface:
+  display_name: "Explain · 双层解释"
+  short_description: "先用生活例子建立直觉，再讲专业机制与边界，最后用三个问题检查理解"
+  default_prompt: "请用 $explain 分两层解释当前讨论的概念或问题，并给出三个理解检查问题。"
+
+policy:
+  allow_implicit_invocation: false

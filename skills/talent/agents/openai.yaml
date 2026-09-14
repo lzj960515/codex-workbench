@@ -1,0 +1,7 @@
+interface:
+  display_name: "talent · 天赋挖掘"
+  short_description: "通过具体经历探索被忽略的能力、兴趣和能量模式，形成个人天赋使用说明书。"
+  default_prompt: "请用 $talent 开始天赋挖掘，结合当前对话逐步提问。"
+
+policy:
+  allow_implicit_invocation: false

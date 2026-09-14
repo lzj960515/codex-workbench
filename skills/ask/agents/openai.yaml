@@ -1,0 +1,7 @@
+interface:
+  display_name: "ask · 苏格拉底式提问"
+  short_description: "通过逐轮提问澄清困惑、事实和假设，找到真正值得回答的问题。"
+  default_prompt: "请用 $ask 对当前讨论的内容进行苏格拉底式提问。"
+
+policy:
+  allow_implicit_invocation: false

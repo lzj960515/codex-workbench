@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tech Choice · 技术选型"
+  short_description: "根据业务目标和现实约束筛选技术方案，比较关键取舍并给出明确建议"
+  default_prompt: "请用 $tech-choice 根据当前业务目标和约束筛选技术方案，比较关键取舍并给出推荐。"
+
+policy:
+  allow_implicit_invocation: false

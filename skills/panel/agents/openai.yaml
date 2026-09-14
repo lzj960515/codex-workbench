@@ -1,0 +1,7 @@
+interface:
+  display_name: "panel · 专家会诊"
+  short_description: "用三种互补专业视角分析问题，检验分歧和假设，综合形成可行动的建议。"
+  default_prompt: "请用 $panel 对当前讨论的内容进行专家会诊。"
+
+policy:
+  allow_implicit_invocation: false

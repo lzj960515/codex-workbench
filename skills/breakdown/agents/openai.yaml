@@ -1,0 +1,7 @@
+interface:
+  display_name: "Breakdown · 业务拆解"
+  short_description: "拆解业务背景、要解决的问题和具体做法，理解关键选择与可迁移规律"
+  default_prompt: "请用 $breakdown 拆解当前讨论的内容：业务背景是什么，想解决什么问题，具体怎么解决的。"
+
+policy:
+  allow_implicit_invocation: false

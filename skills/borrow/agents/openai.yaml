@@ -1,0 +1,7 @@
+interface:
+  display_name: "borrow · 跨领域借解"
+  short_description: "从其他领域寻找结构相似的问题，提炼可迁移机制并设计低成本尝试。"
+  default_prompt: "请用 $borrow 对当前讨论的内容进行跨领域借解。"
+
+policy:
+  allow_implicit_invocation: false

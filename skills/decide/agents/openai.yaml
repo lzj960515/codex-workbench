@@ -1,0 +1,7 @@
+interface:
+  display_name: "decide · 双向钢人论证"
+  short_description: "分别建立两个选择的最强论证，找出关键分歧，再根据补充信息作出判断。"
+  default_prompt: "请用 $decide 对当前讨论的内容进行双向钢人论证。"
+
+policy:
+  allow_implicit_invocation: false

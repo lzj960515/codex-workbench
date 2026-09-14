@@ -42,6 +42,19 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | --- | --- |
 | [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
 | [`code-review`](skills/code-review/) | 审查候选、评估审查意见并在返工后复审，以真实交付风险推动结论收敛。 |
+| [`align`](skills/align/) | 手动使用 `$align` 对齐意思和期望的处理程度，理解了就简短确认，有疑问就提问；默认不自动触发。 |
+| [`explain`](skills/explain/) | 手动使用 `$explain`，先用生活例子解释，再讲专业机制，最后给出三个理解检查问题；默认不自动触发。 |
+| [`breakdown`](skills/breakdown/) | 手动使用 `$breakdown`，拆解业务背景、要解决的问题和具体做法，理解关键选择与可迁移规律；默认不自动触发。 |
+| [`tech-choice`](skills/tech-choice/) | 手动使用 `$tech-choice`，根据业务目标筛选技术方案、比较关键取舍并给出推荐；默认不自动触发。 |
+| [`ask`](skills/ask/) | 手动使用 `$ask`，通过逐轮提问澄清困惑、事实和假设，找到真正值得回答的问题。 |
+| [`fact-check`](skills/fact-check/) | 手动使用 `$fact-check`，核查说法中的事实、推理和价值判断，指出证据缺口并说明可以相信到什么程度。 |
+| [`panel`](skills/panel/) | 手动使用 `$panel`，用三种互补专业视角分析问题，检验分歧和假设，综合形成可行动的建议。 |
+| [`rethink`](skills/rethink/) | 手动使用 `$rethink`，从基本事实、目标和现实约束重新推导路径，检查惯性假设与表面修补。 |
+| [`borrow`](skills/borrow/) | 手动使用 `$borrow`，从其他领域寻找结构相似的问题，提炼可迁移机制并设计低成本尝试。 |
+| [`decide`](skills/decide/) | 手动使用 `$decide`，分别建立两个选择的最强论证，找出关键分歧，再根据补充信息作出判断。 |
+| [`experiment`](skills/experiment/) | 手动使用 `$experiment`，找出决定背后的关键假设，设计低成本可逆实验，明确指标和继续或停止的条件。 |
+| [`talent`](skills/talent/) | 手动使用 `$talent`，通过具体经历探索被忽略的能力、兴趣和能量模式，形成个人天赋使用说明书。 |
+| [`life`](skills/life/) | 手动使用 `$life`，梳理当前状态与价值取向，探索三个五年人生版本，并制定可以尝试的原型行动。 |
 | [`deep-discussion`](skills/deep-discussion/) | 依据真实证据和决策依赖推进讨论，澄清领域概念，为外部信息缺口整理问卷，并选择直接答复或持续文档。 |
 | [`prototype`](skills/prototype/) | 手动使用 `$prototype`，制作可操作的逻辑模型或比较界面方案；默认不自动触发。 |
 | [`to-spec`](skills/to-spec/) | 将已有讨论和决策地图中的确认内容整理为正式规格，明确行为、验收与未决事项。 |

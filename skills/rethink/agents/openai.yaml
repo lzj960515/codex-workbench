@@ -1,0 +1,7 @@
+interface:
+  display_name: "rethink · 第一性原理"
+  short_description: "从基本事实、目标和现实约束重新推导路径，检查惯性假设与表面修补。"
+  default_prompt: "请用 $rethink 对当前讨论的内容进行第一性原理。"
+
+policy:
+  allow_implicit_invocation: false

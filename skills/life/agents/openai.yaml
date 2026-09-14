@@ -1,0 +1,7 @@
+interface:
+  display_name: "life · 人生设计"
+  short_description: "梳理当前状态与价值取向，探索三个五年人生版本，并制定可以尝试的原型行动。"
+  default_prompt: "请用 $life 开始人生设计，结合当前对话逐步提问。"
+
+policy:
+  allow_implicit_invocation: false

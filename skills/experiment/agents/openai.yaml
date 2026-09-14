@@ -1,0 +1,7 @@
+interface:
+  display_name: "experiment · 最小实验"
+  short_description: "找出决定背后的关键假设，设计低成本可逆实验，明确指标和继续或停止的条件。"
+  default_prompt: "请用 $experiment 对当前讨论的内容进行最小实验。"
+
+policy:
+  allow_implicit_invocation: false

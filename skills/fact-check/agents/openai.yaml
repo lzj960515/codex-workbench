@@ -1,0 +1,7 @@
+interface:
+  display_name: "fact-check · 事实核查"
+  short_description: "核查说法中的事实、推理和价值判断，指出证据缺口并说明可以相信到什么程度。"
+  default_prompt: "请用 $fact-check 对当前讨论的内容进行事实核查。"
+
+policy:
+  allow_implicit_invocation: false
