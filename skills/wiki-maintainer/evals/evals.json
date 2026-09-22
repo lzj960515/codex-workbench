@@ -1,0 +1,44 @@
+{
+  "skill_name": "wiki-maintainer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用 wiki-maintainer 把 sources/notes.md 整理成我们科普自媒体团队的 wiki，后面还会继续补充资料。直接创建文件。",
+      "fixture": "fixtures/media",
+      "sandbox": "workspace-write",
+      "expected_output": "有来源的自媒体知识页面、按用途建立的渐进导航、独立维护记录。",
+      "expectations": [
+        "分类体现自媒体任务，单位等共享约定有合理归属；目录按实际资料创建",
+        "总入口介绍直接目录，目录入口介绍直接子项，正文承载细节",
+        "每次维护独立文件，文件名有日期主题和唯一后缀，记录来源与页面",
+        "维护记录通过目录发现，不在总索引或记录README逐条登记",
+        "来源原文保持不变，事实可追溯"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 wiki-maintainer 把 sources/units-update.md 的新确认更新到现有 docs 知识库，保持知识一致。",
+      "fixture": "fixtures/workspace",
+      "sandbox": "workspace-write",
+      "expected_output": "沿用共享标准归属，更新单位权威页面并新增独立记录；其余导航内容不变。",
+      "expectations": [
+        "单位规则仍属于standards，保留maps/standards/playbooks结构",
+        "units.md加入毫秒及展示层换算规则并引用来源",
+        "一条带唯一后缀的独立维护记录链接受影响页面与来源",
+        "根导航和各README内容保持不变，无集中日志新增或修改",
+        "没有新建无资料支持的分类"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "用 wiki-maintainer 查一下我们统一的长度和温度单位是什么，给我现有文档依据。",
+      "fixture": "fixtures/workspace",
+      "sandbox": "workspace-write",
+      "expected_output": "引用现有单位页面回答，无新知识，文件不变。",
+      "expectations": [
+        "回答厘米和摄氏度并引用units.md",
+        "所有初始文件保持不变且没有新增文件"
+      ]
+    }
+  ]
+}

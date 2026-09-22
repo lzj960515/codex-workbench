@@ -161,7 +161,7 @@ class SkillContractTest(unittest.TestCase):
             "修订结论",
             "健康检查",
             "index.md",
-            "log.md",
+            "changes/",
             "权威页面",
             "可追溯来源",
             "综合判断",
