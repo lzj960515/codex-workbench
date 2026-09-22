@@ -39,6 +39,22 @@
         "回答厘米和摄氏度并引用units.md",
         "所有初始文件保持不变且没有新增文件"
       ]
+    },
+    {
+      "id": 4,
+      "name": "engineering-lifecycle",
+      "prompt": "用 wiki-maintainer 根据 sources/review.md 更新投递服务文档，整理方案、决定和历史的阅读路径，让后来的开发者看清当前行为、已做和未做的部分，以及为什么放弃旧方案。直接修改文档。",
+      "fixture": "fixtures/engineering",
+      "sandbox": "workspace-write",
+      "source": "User requested integrating plans, decisions and archival into the existing Wiki workflow without replacing it.",
+      "expectations": [
+        "当前说明准确记录生产重试与人工补发，不把本地告警描述为已上线",
+        "重试计划记录实际完成和剩余范围，依据可追溯",
+        "轮询方案保留真实放弃原因及后继链接，在导航中明确区别于当前方案",
+        "队列决定仍有效，不因已经实施而归档或强制搬目录",
+        "原始材料不变，单一根入口、相对链接，无空分类或平行任务系统",
+        "一份独立维护记录覆盖本次知识变化，无虚构取舍或证据"
+      ]
     }
   ]
 }
