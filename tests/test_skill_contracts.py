@@ -160,7 +160,7 @@ class SkillContractTest(unittest.TestCase):
             "回答并沉淀问题",
             "修订结论",
             "健康检查",
-            "index.md",
+            "README.md",
             "changes/",
             "权威页面",
             "可追溯来源",

@@ -1,3 +1,8 @@
 # 团队知识库
 
-范围：跨项目地图、共享标准与运维方法。入口见[index](index.md)。
+范围：跨项目地图、共享标准与运维方法。
+
+- [地图](maps/README.md)：定位项目。
+- [共享标准](standards/README.md)：各项目共同约定。
+- [运维方法](playbooks/README.md)：调查与恢复。
+- [维护记录](changes/README.md)：按日期和主题查文件。
