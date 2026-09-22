@@ -56,7 +56,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`talent`](skills/talent/) | 手动使用 `$talent`，通过具体经历探索被忽略的能力、兴趣和能量模式，形成个人天赋使用说明书。 |
 | [`life`](skills/life/) | 手动使用 `$life`，梳理当前状态与价值取向，探索三个五年人生版本，并制定可以尝试的原型行动。 |
 | [`deep-discussion`](skills/deep-discussion/) | 依据真实证据和决策依赖推进讨论，澄清领域概念，为外部信息缺口整理问卷，并选择直接答复或持续文档。 |
-| [`prototype`](skills/prototype/) | 手动使用 `$prototype`，制作可操作的逻辑模型或比较界面方案；默认不自动触发。 |
+| [`prototype`](skills/prototype/) | 制作可操作的逻辑模型或比较界面方案，验证尚未确定的设计问题。 |
 | [`to-spec`](skills/to-spec/) | 将已有讨论和决策地图中的确认内容整理为正式规格，明确行为、验收与未决事项。 |
 | [`wayfinder`](skills/wayfinder/) | 创建和恢复跨会话决策地图，跟踪依赖、未决事项与当前可推进的问题。 |
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |

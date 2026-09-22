@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $prototype to build a small logic demo or UI comparison that answers the current design question."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
