@@ -1,0 +1,8 @@
+---
+name: analyze-video-reference
+description: 使用本机FFmpeg和Whisper，从项目根读取docs/README.md并运行scripts/analyze.py，将结果写入analyses，分析完成后交给制作Skill。用户要转录视频、提取关键帧或拆解讲解内容时使用。
+---
+
+# analyze-video-reference
+
+解析用户提供的视频，按任务生成文字或画面证据。

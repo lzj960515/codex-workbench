@@ -1,0 +1,8 @@
+---
+name: prepare-report
+description: 为内容工作台使用Python读取数据，先查AGENTS.md，再运行脚本，输出Markdown到deliveries，完成后交给review。用户要把业务数据整理成报告时使用。
+---
+
+# prepare-report
+
+按用户指定指标组织报告，保留数据来源。

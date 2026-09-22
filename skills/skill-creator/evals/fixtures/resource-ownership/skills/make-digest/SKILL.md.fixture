@@ -1,0 +1,7 @@
+---
+name: make-digest
+description: 使用本机Python读取本项目的JSON资料并在项目根目录运行脚本，输出后交给发布Skill。用户要求生成资料简报时使用。
+---
+# 生成资料简报
+
+读取项目 AGENTS.md 和 docs/digest-guide.md，然后在项目根运行 scripts/make_digest.py，生成简报并提供结果路径。

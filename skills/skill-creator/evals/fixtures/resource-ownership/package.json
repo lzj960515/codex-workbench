@@ -1,0 +1,1 @@
+{"name": "content-workbench", "private": true, "scripts": {"build": "node app/build.mjs"}}

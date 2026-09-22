@@ -21,6 +21,42 @@
       "fixture_renames": {
         "skills/cost-summary/SKILL.md.fixture": "skills/cost-summary/SKILL.md"
       }
+    },
+    {
+      "id": 2,
+      "name": "resource-ownership",
+      "prompt": "请整理这个内容工作台里的 make-digest Skill 及其相关资源，改好描述和使用说明，让它作为项目内安装的能力有清楚的职责。现有应用构建能力继续保留。用 inputs/sample.json 本地验证一次，结果放 deliveries/sample.md。本次整理及验证在本地完成，不再发起其他Agent或模型评测。",
+      "fixture": "fixtures/resource-ownership",
+      "fixture_renames": {
+        "skills/make-digest/SKILL.md.fixture": "skills/make-digest/SKILL.md"
+      },
+      "sandbox": "workspace-write",
+      "source": "2026-09-21 user corrected confusion between project-local installation and ownership of Skill resources.",
+      "expectations": [
+        "description聚焦生成资料简报的用途与触发，不塞执行工具/根路径/后续交接",
+        "Skill自己的guide和辅助脚本归自身references/scripts，调用说明随迁移更新且无旧执行副本",
+        "项目package.json与app/build.mjs保持原位置和内容",
+        "脚本从其他cwd可执行，显式input/output，deliveries/sample.md内容符合原契约",
+        "不将项目专用解释为把自有能力散放根目录，不反过来搬走项目业务构建能力"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "description-purpose",
+      "prompt": "请重写 skills/ 下面三个Skill的description，让Agent容易判断什么任务应该使用它们。保留各自现有能力和边界，其余正文不改。这次只改描述并在本地检查，不执行这些业务流程，也不发起其他Agent或模型评测。",
+      "fixture": "fixtures/description-purpose",
+      "fixture_renames": {
+        "skills/analyze-video-reference/SKILL.md.fixture": "skills/analyze-video-reference/SKILL.md",
+        "skills/prepare-report/SKILL.md.fixture": "skills/prepare-report/SKILL.md",
+        "skills/ffmpeg-inspect/SKILL.md.fixture": "skills/ffmpeg-inspect/SKILL.md"
+      },
+      "sandbox": "workspace-write",
+      "source": "2026-09-21 user reports repeated description pollution by tools, project boilerplate and handoff instructions.",
+      "expectations": [
+        "三个description都说明实际任务和触发情景，清除实现步骤/输出目录/根运行/后续交接",
+        "ffmpeg-inspect保留FFmpeg或ffprobe作为任务识别对象，区别于无条件删除所有工具名",
+        "三个正文与name保持不变，无额外业务产物或代理会话"
+      ]
     }
   ]
 }

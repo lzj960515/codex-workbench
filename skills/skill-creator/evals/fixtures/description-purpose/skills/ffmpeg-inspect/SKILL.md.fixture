@@ -1,0 +1,8 @@
+---
+name: ffmpeg-inspect
+description: 使用FFmpeg检查媒体。用户要求运行ffprobe查看视频编码、尺寸、帧率和音轨信息时使用。从项目根运行并把输出写到output目录。
+---
+
+# ffmpeg-inspect
+
+查看指定媒体的实际流信息，报告用户需要的属性。
