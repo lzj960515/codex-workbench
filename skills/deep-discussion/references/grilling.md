@@ -1,20 +1,8 @@
 Interview the user relentlessly until you reach a shared understanding of the current goal. Map this as a **design tree**: every decision branches into the decisions that hang off it. Include branches that can change the agreed outcome or its necessary constraints; keep optional extensions separate.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Group independent frontier questions into a round the user can comfortably answer: number each question and give your recommended answer. Then wait for the user's answers before the next dependent round.
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Choose the next consequential frontier decision and make the user's contribution concrete: what needs deciding, why the answer matters, and what experience or preference they can contribute. Group independent questions only when they remain comfortable to answer together. Then use the answers to determine the next dependent round.
 
-Format a round like so:
-
-```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
-
----
-
-❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
-
-➡️ <your recommended answer>
-```
+Fit the question to the decision. For a trade-off, explain the meaningful alternatives and your recommendation. For a user's experience or intent, invite a concrete example. Present the specific question alongside the reasoning it resolves so the user can respond without having to infer their role from an analysis outline. Number several independent questions when it helps readability; use ordinary conversation for a single issue.
 
 Each round the user answers reshapes the tree: settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
 
