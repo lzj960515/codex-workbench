@@ -23,7 +23,7 @@ Before editing, identify:
 
 Every added product behavior, public API, dependency, state, persistence mechanism, configuration, fallback, compatibility path, or abstraction—and every existing one whose responsibility this task replaces—must be justified by the agreed outcome, an existing contract, or an observed risk. It is required when omitting it would make acceptance fail, violate an existing contract, or leave an observed risk unresolved. A useful enhancement, generic capability, or possible future reuse remains a separate follow-up candidate.
 
-Choose reversible internal details autonomously when they preserve the agreed observable behavior, data, security, compatibility range, and runtime lifecycle. Keep unspecified user-visible behavior, support commitments, and lasting operational responsibilities outside the product scope as explicit follow-up candidates. When such a choice is necessary to make the requirement executable and current evidence does not decide it, ask the single question that changes the outcome.
+先区分功能目标、代理推荐方案和用户已批准的数据变更。按适用的 `AGENTS.md` 核对模型确认边界：必要性证据形成提案依据，明确授权决定哪些模型及其依赖实现可以开始。已批准范围直接执行；缺少确认时先交付调查充分的具体方案，并继续不依赖该决策的工作。在已确认行为、数据契约、安全、兼容范围和生命周期内，自主选择可逆实现细节；新增用户行为、支持承诺和长期运行责任仍以已确认范围为准。
 
 Use current source, tests, product contracts, and the established root cause to prove necessity. Industry best practices and complete-lifecycle questions identify what to inspect; they do not by themselves require another product behavior, persistence mechanism, data operation, compatibility commitment, operational surface, or parallel entry-point change. When the repository or contract is unavailable, state the confirmed behavioral boundary and unresolved evidence instead of inventing a complete component model or acceptance suite.
 
@@ -37,8 +37,8 @@ For a behavioral change, continue through the full workflow. Load [references/de
 
 1. Start from the public entry or business action, not from the first keyword match.
 2. Trace decisions upstream and data, state, and side effects downstream.
-3. Read adjacent implementations, tests, types, project instructions, and installed dependencies.
-4. Derive the required business sequence from the agreed result and verified contracts, then compare it with the existing structure. Treat current classes, names, flags, and defaults as evidence to assess, rather than constraints to preserve automatically.
+3. 阅读同类实现与历史处理、测试、类型、项目约定及已有依赖，按当前影响追踪现有记录的使用方，包括相关界面和恢复流程。
+4. 从已确认结果还原业务顺序，先验证现有模型的复用方案。具体名称或分类不同只是调查线索；新增独立来源或平行流程的依据，是现有契约无法承载的真实行为差异。
 5. Identify the responsibility that should own the change; separate definition-time configuration, instance/call inputs, and runtime state when their lifecycles differ.
 6. When a design choice depends on actual usage, cost, volume, or freshness, inspect bounded runtime evidence as well as callers. Distinguish a configured ceiling from requests sent, results returned, and useful outcomes. Keep unverified coverage or savings claims unresolved.
 
@@ -53,7 +53,7 @@ Search in this order:
 3. an already-installed, maintained library;
 4. a small project-owned implementation.
 
-Prefer reuse when the existing capability expresses the needed semantics, error model, lifecycle, and performance envelope without a large adaptation layer. Prefer a project-owned implementation when the behavior is small, domain-specific, and easier to understand than the dependency integration.
+先判断现有业务模型能否通过原地扩展完成目标，再决定库与实现方式。比较新增概念、持久状态、分支、迁移、使用方改动和长期维护成本；复用会破坏现有语义或约束时，给出具体场景和证据后再推荐新模型。局部小规则适合留在原职责内，必要的新职责按授权范围实现。
 
 When adapting a library, keep its native terminology and options at the technical boundary. Wrap it only to express missing domain meaning or to isolate a real provider variation.
 
@@ -114,6 +114,7 @@ Before validation, compare the complete task diff with its original baseline, th
 - related changes can extend the existing responsibility without another patch or a speculative extension point;
 - newly added responsibilities and retained transition paths have current evidence; the replaced responsibility has one clear owner, and superseded paths have exited or have a justified temporary lifetime;
 - every new user-visible behavior or support commitment was confirmed or is strictly necessary for acceptance;
+- 数据模型选择有现有方案的比较依据，实际变更符合已批准范围，受影响的记录读取、展示与恢复仍遵守原契约；
 - the implementation contains no duplicate library capability, one-off abstraction, swallowed error, or unrelated cleanup.
 
 When the user corrects the approach, remove or revise artifacts based on the rejected assumption across the full task diff. Stop once the agreed behavior and replacement are complete; keep unrelated debt outside the task.

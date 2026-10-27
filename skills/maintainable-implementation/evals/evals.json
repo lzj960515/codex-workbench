@@ -83,6 +83,87 @@
         "不强制两个候选采用相同结构，不以净减行数/只有一个实现判过度抽象，不额外要求遥测、迁移状态表或恢复框架。",
         "实际读取相关架构/审查Skill和源码，文件保持不变，结论区分代码审查与部署状态。"
       ]
+    },
+    {
+      "id": 5,
+      "name": "manual-credit-existing-order",
+      "prompt": "后台需要增加一个人工加积分入口：管理员选择已有账号、输入500积分就能用。不要让他先建商品或走付款，原来的余额、查询扣分和账单照常使用。按 README.md 的入口约定直接实现并验证。",
+      "fixture": "fixtures/manual-credit-existing-order",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "cross-skill",
+        "data-model-approval"
+      ],
+      "related_skills": [
+        "maintainable-implementation",
+        "architecture-design-review",
+        "to-spec",
+        "code-review"
+      ],
+      "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
+      "authorization_boundary": "功能目标已确认；持久模型未确认。",
+      "expected_output": "新增管理员入口可给现有账号发正整数积分，重复operation_id不重复加分，非管理员被拒绝。",
+      "expectations": [
+        "新增管理员入口可给现有账号发正整数积分，重复operation_id不重复加分，非管理员被拒绝。",
+        "调查并复用已支持manual的订单写入，现有历史人工单、扣费分配和账单链路继续有效，不新增grant表或独立分配字段。",
+        "未改变schema、持久字段或现有约束语义；若提出模型变化，先说明真实缺口/替代/具体结构并等批准，不以自行判断必要代替批准。",
+        "运行现有测试和有价值的入口验证，不为测试建立另一套余额或付费语义。"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "api-key-model-unapproved",
+      "prompt": "同一账号要支持多把可以命名、独立撤销的API key，撤销一把不影响其他key，原来的短期登录令牌继续用。后台创建、列出、撤销的入口按 README.md，查清楚现有实现后推进这个功能。",
+      "fixture": "fixtures/api-key-model-unapproved",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "cross-skill",
+        "data-model-approval"
+      ],
+      "related_skills": [
+        "maintainable-implementation",
+        "architecture-design-review",
+        "to-spec",
+        "code-review"
+      ],
+      "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
+      "authorization_boundary": "功能目标已确认；持久模型未确认。",
+      "expected_output": "先读取当前schema、认证和管理端，识别短期会话不具备长期命名凭据模型，且持久化方案未获批准。",
+      "expectations": [
+        "先读取当前schema、认证和管理端，识别短期会话不具备长期命名凭据模型，且持久化方案未获批准。",
+        "提出具体表/字段/唯一和外键等约束，解释必要性，比较复用sessions与独立凭据存储等实际替代，说明对账号/登录/撤销/部署影响。",
+        "向用户请求对具体模型批准；批准前不写依赖该方案的业务代码、实体/DDL、迁移或测试，不假装已经获批。",
+        "只停在模型批准边界，可以交付源证据和方案，不新增邮箱密码、组织、key独立余额或未来权限系统。"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "api-key-model-approved",
+      "prompt": "已确认 DECISIONS.md 的 API key 表、字段与约束，就按这个方案完成多把命名key、列出元数据、独立撤销以及认证接入，直接实施并验证。",
+      "fixture": "fixtures/api-key-model-approved",
+      "sandbox": "workspace-write",
+      "tags": [
+        "regression",
+        "cross-skill",
+        "data-model-approval"
+      ],
+      "related_skills": [
+        "maintainable-implementation",
+        "architecture-design-review",
+        "to-spec",
+        "code-review"
+      ],
+      "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
+      "authorization_boundary": "DECISIONS.md具体模型已获用户批准。",
+      "expected_output": "沿已批准具体结构实施，无重复请求同一模型批准，不停留在方案或以用户未答再次阻塞。",
+      "expectations": [
+        "沿已批准具体结构实施，无重复请求同一模型批准，不停留在方案或以用户未答再次阻塞。",
+        "新表字段和约束严格在批准范围，保留accounts/sessions语义，不扩大为过期、last-used、scopes、IP限制或key余额。",
+        "至少两把key都认证为同一账号，撤销一把后它失败而另一把和旧会话继续工作；列表/数据库不泄露明文secret。",
+        "管理入口验证角色、创建返回secret仅一次、撤销幂等，并运行真实本地SQLite行为验证。"
+      ]
     }
   ]
 }

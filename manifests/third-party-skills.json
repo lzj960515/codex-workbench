@@ -103,7 +103,7 @@
         "Preserves the seven-section specification template, implementation-decision categories, and prototype decision snippets.",
         "Enables natural-language invocation and creation or revision from existing conversations and linked decision records.",
         "Uses existing document ownership and explicit draft status instead of setup dependencies, automatic tracker publication, or ready-for-agent labels.",
-        "Constrains stories and acceptance criteria to confirmed decisions and existing contracts; preserves unresolved decisions separately.",
+        "Constrains stories and acceptance criteria to confirmed decisions and existing contracts; records reuse evidence and explicit data-model approval separately from proposals and prototype artifacts.",
         "Selects evidence-based public testing boundaries without a fixed count or routine user approval; deep-discussion and wayfinder invoke this skill by name."
       ]
     },

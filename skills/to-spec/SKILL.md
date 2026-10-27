@@ -9,7 +9,7 @@ Follow the project's document ownership conventions. Update the existing specifi
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching. When working from a decision map, read the linked decisions relevant to this spec in full. Separate confirmed decisions and existing contracts from proposals, assumptions, and unresolved questions. Record gaps under Further Notes; use the `deep-discussion` skill for a missing decision that materially changes the contract, while preserving the established parts of the draft.
+1. 复用已有讨论、源码调查和决策记录，补足影响本次规格的证据。涉及业务流程或模型选择时，核实现有入口、写入、处理和使用方，按影响追踪展示、恢复及同类历史做法。沿用领域术语与相关 ADR；来自决策地图的事项读取完整依据。分别记录用户确认的目标、既有契约、代理推荐和未决事项，按适用的 `AGENTS.md` 核对数据模型的具体批准范围；缺口保留在 Further Notes，需要共同决定时使用 `deep-discussion`。
 
 2. Sketch out the seams at which you're going to test the feature: the public boundaries where its behavior can be observed. Reuse established testing decisions and prefer existing seams that cover the required behavior and failure cases. Choose additional seams when needed for that coverage. Record the observable acceptance criteria and relevant existing tests; make routine testing choices from repository evidence.
 
@@ -39,19 +39,19 @@ Give each story observable acceptance criteria, including required failure behav
 
 ## Implementation Decisions
 
-A list of implementation decisions that were made. This can include:
+先说明现有业务怎样完成相关动作，以及复用方案能否满足本次目标，再记录推荐实现及依据。每项区分既有契约、用户已确认决策和待确认提案，确认状态来自用户的实际决定。内容可以包括：
 
 - The modules that will be built/modified
 - The interfaces of those modules that will be modified
 - Technical clarifications from the developer
 - Architectural decisions
-- Schema changes
+- 数据模型变更：具体表、字段或持久化结构的前后差异；复用现有结构的具体不足；受影响的使用方；确认状态与对应决定。保持结构时简要说明复用路径即可。
 - API contracts
 - Specific interactions
 
 Describe implementation decisions through module responsibilities, interfaces, and contracts; keep source locations in evidence links, where they can be rechecked as the code changes.
 
-If a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
+原型片段能够更准确表达状态机、schema 或类型时，保留决定相关的部分并注明来源和确认状态。原型或测试中的结构仍按原决策状态记录，形成演示不代表获得实施授权。
 
 ## Testing Decisions
 
