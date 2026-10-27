@@ -60,13 +60,35 @@ def check_cancellation():
     return checks
 
 
+def check_reception():
+    app = importlib.import_module("app")
+    store = {"old": {"id": "old", "title": "saved"}}
+    rows = [{"id": "old", "title": "changed"}, {"id": "new", "title": "first"}]
+    assert app.discover(store, rows) == ["old", "new"]
+    assert store == {"old": {"id": "old", "title": "saved"}, "new": rows[1]}
+    assert app.discover(store, rows) == ["old", "new"]
+    assert store["old"]["title"] == "saved"
+    assert app.import_csv(store, rows) == ["old", "new"]
+    assert store["old"]["title"] == "changed"
+    return [
+        "discovery inserts only new identities",
+        "all observed identities returned",
+        "explicit import still updates",
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("case", choices=["mechanical-header", "cancellation-owner"])
+    parser.add_argument("case", choices=["mechanical-header", "cancellation-owner", "replace-sync"])
     parser.add_argument("workspace", type=Path)
     args = parser.parse_args()
     sys.path.insert(0, str(args.workspace.resolve()))
-    checks = check_headers() if args.case == "mechanical-header" else check_cancellation()
+    checker = {
+        "mechanical-header": check_headers,
+        "cancellation-owner": check_cancellation,
+        "replace-sync": check_reception,
+    }[args.case]
+    checks = checker()
     print(json.dumps({"status": "pass", "checks": checks}))
 
 

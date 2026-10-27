@@ -21,7 +21,7 @@ Before editing, identify:
 - the current code, internal capability, or dependency that already solves part of it;
 - adjacent ideas that are useful candidates but are not required by the current outcome.
 
-Every added product behavior, public API, dependency, state, persistence mechanism, configuration, fallback, compatibility path, or abstraction must be justified by the agreed outcome, an existing contract, or an observed risk. It is required when omitting it would make acceptance fail, violate an existing contract, or leave an observed risk unresolved. A useful enhancement, generic capability, or possible future reuse remains a separate follow-up candidate.
+Every added product behavior, public API, dependency, state, persistence mechanism, configuration, fallback, compatibility path, or abstraction—and every existing one whose responsibility this task replaces—must be justified by the agreed outcome, an existing contract, or an observed risk. It is required when omitting it would make acceptance fail, violate an existing contract, or leave an observed risk unresolved. A useful enhancement, generic capability, or possible future reuse remains a separate follow-up candidate.
 
 Choose reversible internal details autonomously when they preserve the agreed observable behavior, data, security, compatibility range, and runtime lifecycle. Keep unspecified user-visible behavior, support commitments, and lasting operational responsibilities outside the product scope as explicit follow-up candidates. When such a choice is necessary to make the requirement executable and current evidence does not decide it, ask the single question that changes the outcome.
 
@@ -38,8 +38,9 @@ For a behavioral change, continue through the full workflow. Load [references/de
 1. Start from the public entry or business action, not from the first keyword match.
 2. Trace decisions upstream and data, state, and side effects downstream.
 3. Read adjacent implementations, tests, types, project instructions, and installed dependencies.
-4. Identify the existing responsibility that should own the change.
-5. Separate definition-time configuration, instance/call inputs, and runtime state when their lifecycles differ.
+4. Derive the required business sequence from the agreed result and verified contracts, then compare it with the existing structure. Treat current classes, names, flags, and defaults as evidence to assess, rather than constraints to preserve automatically.
+5. Identify the responsibility that should own the change; separate definition-time configuration, instance/call inputs, and runtime state when their lifecycles differ.
+6. When a design choice depends on actual usage, cost, volume, or freshness, inspect bounded runtime evidence as well as callers. Distinguish a configured ceiling from requests sent, results returned, and useful outcomes. Keep unverified coverage or savings claims unresolved.
 
 Use search to find exact code, then reason from the full lifecycle. A local patch is acceptable when the existing owner naturally contains the behavior; otherwise repair the responsibility boundary that made the patch awkward.
 
@@ -71,6 +72,10 @@ Keep the change local when the existing owner is stable, the new behavior fits i
 
 Refactor the smallest complete boundary that restores ownership. When choosing the new module interface or where dependencies can vary, read [Codebase Design](../architecture-design-review/references/codebase-design.md). A known next phase can justify a stable responsibility seam, while its future behavior, runtime state, and extension mechanism remain outside the current implementation until required.
 
+For a rewrite or responsibility replacement, decide what remains, changes in place, disappears, and temporarily coexists. Implement the target flow in its owner and switch its actual callers; retire the superseded branches, forwarding layers, registrations, configuration, and redundant tests or documentation within that boundary. Preserve useful platform mappings as functions or adapters according to their real responsibility. Update historical internal names to describe current behavior; preserve wire names when their consumers still require them.
+
+Treat an ongoing supported protocol or public contract as part of the target model. For a path retained temporarily during this replacement, identify its consumers, deployed version combinations, replayable data, or rollback need, and record its owner and concrete exit condition in existing task notes or release documentation. Before retiring an entry point, check its registration, supported callers and relevant in-flight work. Repository-local zero references, an empty queue, or a quiet observation window each supplies only part of that evidence. Evidence gathering does not authorize production changes or data deletion.
+
 Split by responsibility, lifecycle, or independently meaningful failure behavior rather than by the number of code steps. Internal helpers can improve readability without becoming new domain objects, persistent states, Queue jobs, or framework stages.
 
 ## 5. Write A Readable Business Flow
@@ -99,7 +104,7 @@ After logging, rethrow when the operation still failed. Add retries, fallback br
 
 ## 7. Review As The Next Reader
 
-Before validation, read the changed path from its entry point and confirm:
+Before validation, compare the complete task diff with its original baseline, then read the resulting flow from its entry point. For a rewrite, ask how the same agreed behavior would be expressed without having to keep the first implementation's structure. Use that comparison to simplify the candidate, keeping sound existing design; a second implementation or a net line reduction is not a completion requirement. Confirm:
 
 - the business action and sequence are visible without opening every helper;
 - every class and method has a clear reason to exist;
@@ -107,9 +112,11 @@ Before validation, read the changed path from its entry point and confirm:
 - dependencies point from domain behavior toward infrastructure boundaries;
 - names describe intent rather than control flow or data structures;
 - related changes can extend the existing responsibility without another patch or a speculative extension point;
-- every lasting responsibility added by the change traces to the agreed outcome, an existing contract, or an observed risk;
+- newly added responsibilities and retained transition paths have current evidence; the replaced responsibility has one clear owner, and superseded paths have exited or have a justified temporary lifetime;
 - every new user-visible behavior or support commitment was confirmed or is strictly necessary for acceptance;
 - the implementation contains no duplicate library capability, one-off abstraction, swallowed error, or unrelated cleanup.
+
+When the user corrects the approach, remove or revise artifacts based on the rejected assumption across the full task diff. Stop once the agreed behavior and replacement are complete; keep unrelated debt outside the task.
 
 For a mechanical edit, finish with the direct check selected in step 1 and the final changed-file review. For a behavioral change, use the task's testing Skill and `verification-before-completion` to produce evidence proportional to risk.
 
