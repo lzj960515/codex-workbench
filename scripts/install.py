@@ -13,6 +13,7 @@ from typing import Callable, Optional
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SKILLS_ROOT = REPOSITORY_ROOT / "skills"
+REPLACED_SKILL_NAMES = ("skill-builder", "skill-creator", "writing-for-agents")
 IGNORED_NAMES = {".DS_Store", "__pycache__"}
 IGNORED_SUFFIXES = {".dtmp", ".pyc"}
 
@@ -128,6 +129,26 @@ def plan_agents_installation(codex_home: Path) -> ManagedInstallationPlan:
     )
 
 
+def plan_replaced_skill_removal(skills_directory: Path) -> list[ManagedInstallationPlan]:
+    plans = []
+    for name in REPLACED_SKILL_NAMES:
+        source = SKILLS_ROOT / name
+        target = skills_directory / name
+        if target.is_symlink():
+            # 旧目录移除后仍按链接目标确认归属，其他来源的断链也保留为冲突。
+            state = (
+                ManagedTargetState.CURRENT_LINK
+                if target.resolve() == source.resolve()
+                else ManagedTargetState.CONFLICT
+            )
+        elif target.exists():
+            state = ManagedTargetState.CONFLICT
+        else:
+            state = ManagedTargetState.MISSING
+        plans.append(ManagedInstallationPlan(source=source, target=target, state=state))
+    return plans
+
+
 def reject_conflicts(plans: list[ManagedInstallationPlan]) -> None:
     conflicts = [plan for plan in plans if plan.state is ManagedTargetState.CONFLICT]
     if not conflicts:
@@ -138,7 +159,8 @@ def reject_conflicts(plans: list[ManagedInstallationPlan]) -> None:
     )
     raise SystemExit(
         "Installation stopped because local content differs from the "
-        f"repository:\n{details}"
+        f"repository:\n{details}\n"
+        "Resolve these local paths before rerunning installation."
     )
 
 
@@ -196,6 +218,13 @@ def install_skills(plans: list[ManagedInstallationPlan], mode: str) -> None:
             link_managed_path(plan, "Skill")
         else:
             copy_managed_path(plan, "Skill")
+
+
+def remove_replaced_skill_links(plans: list[ManagedInstallationPlan]) -> None:
+    for plan in plans:
+        if plan.state is ManagedTargetState.CURRENT_LINK:
+            plan.target.unlink()
+            print(f"Removed replaced Skill link {plan.target}")
 
 
 def install_agents_file(
@@ -307,10 +336,18 @@ def main() -> None:
         if args.agents_mode == "skip"
         else plan_agents_installation(args.codex_home)
     )
-    managed_plans = skill_plans + ([agents_plan] if agents_plan else [])
+    replaced_skill_plans = (
+        []
+        if args.skills_mode == "skip"
+        else plan_replaced_skill_removal(args.skills_directory)
+    )
+    managed_plans = (
+        skill_plans + replaced_skill_plans + ([agents_plan] if agents_plan else [])
+    )
 
     reject_conflicts(managed_plans)
     install_skills(skill_plans, args.skills_mode)
+    remove_replaced_skill_links(replaced_skill_plans)
     install_agents_file(agents_plan, args.agents_mode)
     install_hooks(args.codex_home)
 

@@ -103,9 +103,9 @@ class SkillContractTest(unittest.TestCase):
 
     def test_quality_skills_preserve_decision_and_stopping_contracts(self) -> None:
         contracts = {
-            "skill-builder": (
-                "可观察的错误行为",
-                "优化什么结果",
+            "writing-for-ai": (
+                "编写让 AI 能够准确理解和使用的内容",
+                "让设计意图落实到内容和使用方式中",
                 "正确停止方式",
             ),
             "maintainable-implementation": (
@@ -141,7 +141,10 @@ class SkillContractTest(unittest.TestCase):
         self.assertNotIn("nestjs-best-practices", names)
         self.assertNotIn("typeorm", names)
         self.assertNotIn("skill-creator", names)
-        self.assertTrue((SKILLS_ROOT / "skill-creator" / "SKILL.md").is_file())
+        self.assertTrue((SKILLS_ROOT / "writing-for-ai" / "SKILL.md").is_file())
+        for retired_skill in ("skill-builder", "skill-creator", "writing-for-agents"):
+            with self.subTest(retired_skill=retired_skill):
+                self.assertFalse((SKILLS_ROOT / retired_skill).exists())
 
     def test_code_review_replaces_the_receiving_only_skill(self) -> None:
         self.assertTrue((SKILLS_ROOT / "code-review" / "SKILL.md").is_file())

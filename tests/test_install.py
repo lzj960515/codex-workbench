@@ -20,11 +20,12 @@ class InstallerTest(unittest.TestCase):
         skills_mode: str = "link",
         agents_mode: str = "link",
         check: bool = True,
+        installer: Path = INSTALLER,
     ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [
                 sys.executable,
-                str(INSTALLER),
+                str(installer),
                 "--codex-home",
                 str(codex_home),
                 "--skills-directory",
@@ -41,6 +42,117 @@ class InstallerTest(unittest.TestCase):
 
     def make_installation_paths(self, root: Path) -> tuple[Path, Path]:
         return root / "codex", root / "agents" / "skills"
+
+    def make_merged_skills_repository(self, root: Path) -> Path:
+        repository = root / "repository"
+        (repository / "scripts").mkdir(parents=True)
+        shutil.copy2(INSTALLER, repository / "scripts" / "install.py")
+        shutil.copy2(REPOSITORY_ROOT / "AGENTS.md", repository / "AGENTS.md")
+        shutil.copytree(REPOSITORY_ROOT / "hooks", repository / "hooks")
+        skill_directory = repository / "skills" / "writing-for-ai"
+        skill_directory.mkdir(parents=True)
+        (skill_directory / "SKILL.md").write_text(
+            "---\nname: writing-for-ai\ndescription: Write AI context.\n---\n",
+            encoding="utf-8",
+        )
+        return repository
+
+    def test_merged_skill_replaces_only_repository_owned_legacy_links(self) -> None:
+        for skills_mode in ("link", "copy"):
+            with self.subTest(skills_mode=skills_mode):
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    repository = self.make_merged_skills_repository(root)
+                    codex_home, skills_directory = self.make_installation_paths(root)
+                    skills_directory.mkdir(parents=True)
+                    legacy_names = ("skill-builder", "skill-creator", "writing-for-agents")
+                    for name in legacy_names:
+                        (skills_directory / name).symlink_to(repository / "skills" / name)
+                    unrelated = skills_directory / "personal-skill"
+                    unrelated.mkdir()
+                    (unrelated / "SKILL.md").write_text("Personal content\n", encoding="utf-8")
+
+                    self.run_installer(
+                        codex_home,
+                        skills_directory,
+                        skills_mode=skills_mode,
+                        installer=repository / "scripts" / "install.py",
+                    )
+
+                    installed = skills_directory / "writing-for-ai"
+                    self.assertTrue((installed / "SKILL.md").is_file())
+                    self.assertEqual(skills_mode == "link", installed.is_symlink())
+                    for name in legacy_names:
+                        self.assertFalse((skills_directory / name).is_symlink())
+                        self.assertFalse((skills_directory / name).exists())
+                    self.assertEqual(
+                        "Personal content\n",
+                        (unrelated / "SKILL.md").read_text(encoding="utf-8"),
+                    )
+
+    def test_custom_legacy_skill_stops_installation_before_changes(self) -> None:
+        for conflict_kind in ("directory", "external-link", "external-broken-link"):
+            with self.subTest(conflict_kind=conflict_kind):
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    repository = self.make_merged_skills_repository(root)
+                    codex_home, skills_directory = self.make_installation_paths(root)
+                    skills_directory.mkdir(parents=True)
+                    owned_link = skills_directory / "skill-builder"
+                    owned_link.symlink_to(repository / "skills" / "skill-builder")
+                    custom = skills_directory / "skill-creator"
+                    if conflict_kind == "directory":
+                        custom.mkdir()
+                        (custom / "SKILL.md").write_text("Custom content\n", encoding="utf-8")
+                    else:
+                        alternate = root / "alternate" / "skill-creator"
+                        if conflict_kind == "external-link":
+                            alternate.mkdir(parents=True)
+                            (alternate / "SKILL.md").write_text("Custom content\n", encoding="utf-8")
+                        custom.symlink_to(alternate)
+
+                    result = self.run_installer(
+                        codex_home,
+                        skills_directory,
+                        check=False,
+                        installer=repository / "scripts" / "install.py",
+                    )
+
+                    self.assertNotEqual(0, result.returncode)
+                    self.assertIn("skill-creator", result.stderr)
+                    self.assertIn(str(custom), result.stderr)
+                    self.assertTrue(owned_link.is_symlink())
+                    if conflict_kind == "directory":
+                        self.assertEqual("Custom content\n", (custom / "SKILL.md").read_text(encoding="utf-8"))
+                    else:
+                        self.assertTrue(custom.is_symlink())
+                        self.assertEqual(alternate, custom.readlink())
+                    self.assertFalse((skills_directory / "writing-for-ai").exists())
+                    self.assertFalse(codex_home.exists())
+
+    def test_skills_skip_preserves_legacy_links_and_custom_content(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            repository = self.make_merged_skills_repository(root)
+            codex_home, skills_directory = self.make_installation_paths(root)
+            skills_directory.mkdir(parents=True)
+            owned_link = skills_directory / "skill-builder"
+            owned_link.symlink_to(repository / "skills" / "skill-builder")
+            custom = skills_directory / "skill-creator"
+            custom.mkdir()
+            (custom / "SKILL.md").write_text("Custom content\n", encoding="utf-8")
+
+            self.run_installer(
+                codex_home,
+                skills_directory,
+                skills_mode="skip",
+                installer=repository / "scripts" / "install.py",
+            )
+
+            self.assertTrue(owned_link.is_symlink())
+            self.assertEqual("Custom content\n", (custom / "SKILL.md").read_text(encoding="utf-8"))
+            self.assertFalse((skills_directory / "writing-for-ai").exists())
+            self.assertTrue((codex_home / "AGENTS.md").is_symlink())
 
     def test_fresh_install_installs_rules_and_portable_hooks(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

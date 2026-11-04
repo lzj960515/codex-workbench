@@ -9,7 +9,7 @@
 在修改活跃 Skill 前，从代表实际使用范围的目录发现并复制完整组合：
 
 ```bash
-python3 <skill-creator>/scripts/codex_skill_eval.py \
+python3 <writing-for-ai>/scripts/codex_skill_eval.py \
   --snapshot --cwd <source-project> \
   --suite <target-skill>/evals/evals.json \
   --out <task-tmp>/comparison
@@ -51,11 +51,11 @@ python3 <skill-creator>/scripts/codex_skill_eval.py \
 ## 3. 先检查发现，再按需运行
 
 ```bash
-python3 <skill-creator>/scripts/codex_skill_eval.py \
+python3 <writing-for-ai>/scripts/codex_skill_eval.py \
   --matrix <comparison>/evaluation-matrix.json --variant candidate --case 1 \
   --check-only --out <task-tmp>/discovery-check
 
-python3 <skill-creator>/scripts/codex_skill_eval.py \
+python3 <writing-for-ai>/scripts/codex_skill_eval.py \
   --matrix <comparison>/evaluation-matrix.json --variant candidate --case 1 \
   --out <task-tmp>/iteration-1/eval-example/new_skill/run-1
 ```

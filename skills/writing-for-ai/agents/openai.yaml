@@ -1,0 +1,4 @@
+interface:
+  display_name: "面向 AI 的内容写作"
+  short_description: "编写和组织 Skill、规则、提示词与知识文档，让 AI 正确理解和使用内容"
+  default_prompt: "请使用 $writing-for-ai 编写或改进这份面向 AI 的内容。"

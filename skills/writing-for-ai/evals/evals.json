@@ -1,8 +1,46 @@
 {
-  "skill_name": "skill-creator",
+  "skill_name": "writing-for-ai",
   "evals": [
     {
       "id": 1,
+      "name": "create-judgment-skill",
+      "prompt": "帮我创建一个核查会议纪要的个人 Skill。输入是逐字稿和纪要，只指出有原文证据的遗漏与失真，合格就直接通过，我不希望每次都重写。请先在当前目录的 draft-skills/ 中写好候选供我审阅，不安装，不改现有个人规则。本轮做本地检查即可，不再启动其他 Agent 或模型评测。",
+      "sandbox": "workspace-write",
+      "expectations": [
+        "自然选用 writing-for-ai 并读取其正文。",
+        "生成可用的 Skill 候选，职责覆盖逐字稿和纪要核对，结论有原文证据，允许合格直接通过。",
+        "保持候选与安装、启用分离，不无条件重写纪要或扩成通用会议处理能力。",
+        "本地验证即可，无额外模型或子 Agent 会话。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "rule-draft-and-pointer",
+      "prompt": "这份准备给 Agent 用的个人规则 personal-rules.md 有点重复，帮我整理成 personal-rules.candidate.md，我看过之后再采用。发布时再读取 docs/release.md 就好，涉及数据结构的具体变更仍先由我确认。保留原文件与发布说明，本轮只整理内容，不执行发布；本地检查即可，不再启动其他 Agent 或模型评测。",
+      "fixture": "fixtures/rule-draft",
+      "sandbox": "workspace-write",
+      "expectations": [
+        "自然选用 writing-for-ai 并读取其正文。",
+        "创建个人规则候选，原规则和发布说明保持原样。",
+        "保留数据授权覆盖表、字段、含义、类型、约束、JSON及其他持久化结构，保留功能与数据确认分离及确认前依赖实现边界。",
+        "合并重复工程规则，发布详细说明通过明确任务条件和有效引用按需读取。",
+        "不执行发布、不安装或启用候选。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "client-copy-boundary",
+      "prompt": "把 announcement.md 这份给客户看的发布说明写得自然、清楚一些，直接修改这个文件即可。产品事实和开放时间保持原样，本轮只改这份文案。",
+      "fixture": "fixtures/client-copy",
+      "sandbox": "workspace-write",
+      "expectations": [
+        "完成客户文案修改，保留CSV导出入口、最近90天、11月10日、所有付费账户和历史账单不变的事实。",
+        "没有选用 writing-for-ai，没有创建Skill、规则或上下文设计产物。",
+        "只改 announcement.md。"
+      ]
+    },
+    {
+      "id": 4,
       "name": "wording-only",
       "prompt": "请把 skills/cost-summary/SKILL.md 正文里的错字“费拥”改成“费用”，其他内容保持原样。",
       "fixture": "fixtures/wording-only",
@@ -23,7 +61,7 @@
       }
     },
     {
-      "id": 2,
+      "id": 5,
       "name": "resource-ownership",
       "prompt": "请整理这个内容工作台里的 make-digest Skill 及其相关资源，改好描述和使用说明，让它作为项目内安装的能力有清楚的职责。现有应用构建能力继续保留。用 inputs/sample.json 本地验证一次，结果放 deliveries/sample.md。本次整理及验证在本地完成，不再发起其他Agent或模型评测。",
       "fixture": "fixtures/resource-ownership",
@@ -41,7 +79,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": 6,
       "name": "description-purpose",
       "prompt": "请重写 skills/ 下面三个Skill的description，让Agent容易判断什么任务应该使用它们。保留各自现有能力和边界，其余正文不改。这次只改描述并在本地检查，不执行这些业务流程，也不发起其他Agent或模型评测。",
       "fixture": "fixtures/description-purpose",

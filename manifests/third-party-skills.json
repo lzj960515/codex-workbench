@@ -78,17 +78,33 @@
   ],
   "bundledSkills": [
     {
-      "name": "writing-for-agents",
+      "name": "writing-for-ai",
       "source": "https://github.com/mattpocock/skills",
       "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "path": "skills/productivity/writing-for-agents",
-      "localPath": "skills/writing-for-agents",
-      "license": "MIT",
-      "licenseFile": "skills/writing-for-agents/LICENSE",
+      "localPath": "skills/writing-for-ai",
+      "license": "MIT AND Apache-2.0",
+      "licenseFile": "skills/writing-for-ai/LICENSE.mattpocock",
       "modifications": [
-        "SKILL.md is preserved byte-for-byte from upstream.",
-        "SKILL-MECHANICS.md defaults to natural-language discovery, distinguishes Claude and Codex invocation settings, and reserves manual routing for explicitly requested workflows.",
-        "agents/openai.yaml adds a default prompt and explicitly enables implicit invocation."
+        "重新编写面向 AI 的内容与知识写作方法，整合原 skill-builder、skill-creator 和 writing-for-agents 的职责。",
+        "保留上游的信息层级、读取入口、就近组织与单一来源方法，采用中文重组表达，原文不再逐字分发。",
+        "Skill 封装、规则文档和信息组织方法按需读取，名称与 description 覆盖 Skill、AGENTS.md、CLAUDE.md、提示词与供 AI 查阅的文档。",
+        "沿用本仓库原 skill-creator 的工程、评测工具及回归用例，新增代表性写作场景。"
+      ],
+      "additionalSources": [
+        {
+          "source": "https://github.com/anthropics/skills",
+          "path": "skills/skill-creator",
+          "license": "Apache-2.0",
+          "licenseFile": "skills/writing-for-ai/LICENSE.anthropic.txt",
+          "note": "工具与评测资源沿用本仓库原 skill-creator 中持续演化的版本；未记录该来源的固定提交。"
+        },
+        {
+          "source": "https://github.com/lzj960515/codex-workbench",
+          "license": "MIT",
+          "licenseFile": "skills/writing-for-ai/LICENSE",
+          "note": "统一主稿、参考资料及本地工具修改由本仓库维护。"
+        }
       ]
     },
     {

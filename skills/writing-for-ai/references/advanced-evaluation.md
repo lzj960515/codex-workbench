@@ -1,6 +1,6 @@
 # Advanced Skill Evaluation
 
-本流程用于比较候选与基线，判断已覆盖场景中的改善、退步和不确定性。验证力度由 SKILL.md 的“校验与测试”决定；语义不变的校对在差异复核后完成。用例与评分原则见 [评估设计](evaluation-design.md)。
+本流程用于比较候选与基线，判断已覆盖场景中的改善、退步和不确定性。验证力度由 SKILL.md 的“核对质量与实际使用”决定；语义不变的校对在差异复核后完成。用例与评分原则见 [评估设计](evaluation-design.md)。
 
 ## 适用条件
 
@@ -112,7 +112,7 @@ iteration-1/
 汇总 benchmark：
 
 ```bash
-cd <skill-creator>
+cd <writing-for-ai>
 python3 -m scripts.aggregate_benchmark \
   <workspace>/iteration-N \
   --skill-name <name> \
@@ -135,7 +135,7 @@ Delta 始终按 `primary - baseline` 计算。标准目录名可以自动识别�
 需要用户比较复杂输出时，使用现有 Viewer，而不是新写页面：
 
 ```bash
-python3 <skill-creator>/eval-viewer/generate_review.py \
+python3 <writing-for-ai>/eval-viewer/generate_review.py \
   <workspace>/iteration-N \
   --skill-name "<name>" \
   --benchmark <workspace>/iteration-N/benchmark.json
@@ -144,7 +144,7 @@ python3 <skill-creator>/eval-viewer/generate_review.py \
 无 GUI 环境使用：
 
 ```bash
-python3 <skill-creator>/eval-viewer/generate_review.py \
+python3 <writing-for-ai>/eval-viewer/generate_review.py \
   <workspace>/iteration-N \
   --skill-name "<name>" \
   --benchmark <workspace>/iteration-N/benchmark.json \

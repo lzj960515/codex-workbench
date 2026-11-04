@@ -4,7 +4,7 @@
 
 ## 内容
 
-- `AGENTS.md`：用户级协作、代码质量、架构、异常处理和长任务交接规则。
+- `AGENTS.md`：用户级偏好、目标与授权边界、工程约束、按任务获取方法及长任务协作规则。
 - `hooks/task-handoff/`：上下文接近压缩时提醒更新任务状态，压缩后提醒恢复工作上下文。
 - `skills/`：自己维护的通用 Skills。
 - `manifests/third-party-skills.json`：第三方 Skills、参考材料及相关项目的来源、版本与修改范围。
@@ -31,6 +31,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 ```
 
 `--skills-mode` 和 `--agents-mode` 分别支持 `link`、`copy` 和 `skip`。只安装用户规则与 Hooks 时使用 `--skills-mode skip`；需要保留含私人内容的本机 `AGENTS.md` 时使用 `--agents-mode skip`，该文件不会进入仓库单一来源。Skill 聚合目录和 Codex 用户目录可以分别通过 `--skills-directory` 与 `--codex-home` 指定。
+
+更新到 `writing-for-ai` 后，安装器会在安装新入口时移除本仓库托管的旧 `skill-builder`、`skill-creator` 和 `writing-for-agents` 链接。旧名字若是独立目录、副本或指向其他来源的链接，安装会在写入前停止并保留内容；先核对并自行迁走这些旧内容，再重新安装。`--skills-mode skip` 保留全部现有 Skill。
 
 公开仓库只保存适合公开、跨设备复用的内容。私人资料、机器专属绝对路径、密钥和内部项目知识保留在本机或对应项目中，不通过本仓库连接。
 
@@ -64,9 +66,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`test-driven-development`](skills/test-driven-development/) | 按回归风险选择 TDD 或直接验证，并用失败测试保护高风险行为。 |
 | [`verification-before-completion`](skills/verification-before-completion/) | 在完成、提交、推送或发布前建立与声明相匹配的验证证据。 |
-| [`skill-builder`](skills/skill-builder/) | 从真实需求设计 Skill 的职责、边界和验收标准。 |
-| [`skill-creator`](skills/skill-creator/) | 实现、组织、校验和评测已经明确职责的 Skill 工程包。 |
-| [`writing-for-agents`](skills/writing-for-agents/) | 保留 Matt Pocock 原文的 Agent 文档写作指导；供独立使用及 Skill Creator 写作环节引用。 |
+| [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
 | [`source-repo-study`](skills/source-repo-study/) | 系统研究源码仓库，并整理成架构、功能和数据流 Wiki。 |
 | [`wiki-maintainer`](skills/wiki-maintainer/) | 持续摄取和修订 Markdown Wiki，维护索引、链接和知识一致性。 |
 | [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
@@ -74,7 +74,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 `drawio` 和 `mindmap` 需要安装 draw.io Desktop，并让 `drawio` 命令可以从终端调用。
 
-`skill-creator` 基于 Anthropic 发布的 Apache-2.0 版本持续修改，目录内保留原许可证和修改说明。
+`writing-for-ai` 整合原三个写作 Skill，保留已有的工程与评测工具；替换依据和验证边界见[采用记录](docs/changes/2026-11-04-writing-for-ai.md)。
 
 ## Hooks 清单
 
@@ -92,7 +92,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 仍由上游维护的第三方 Skills、Codrive 和文档处理 Skills 来源记录在 [`manifests/third-party-skills.json`](manifests/third-party-skills.json)，使用时遵循对应项目的许可证。
 
-`writing-for-agents` 的 `SKILL.md` 保留上游原文；`SKILL-MECHANICS.md` 适配本体系的自动发现偏好和平台调用设置。来源版本与修改范围记录在来源清单中，MIT 许可证随包保留。
+`writing-for-ai` 重新编写共同的写作方法，参考 Matt Pocock 的信息组织方法，并沿用本仓库原 `skill-creator` 中基于 Anthropic 版本演化的工程与评测资源。包内保留本仓库 MIT、Matt Pocock MIT 和 Anthropic Apache-2.0 许可证；来源与修改范围见[修改说明](skills/writing-for-ai/NOTICE.md)和来源清单。
 
 Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单，相关包保留 `LICENSE.mattpocock`。
 
