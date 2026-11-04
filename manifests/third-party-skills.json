@@ -73,7 +73,7 @@
         "pptx",
         "xlsx"
       ],
-      "note": "Obtain these Skills from their official distribution and follow the upstream license. Their implementation is not copied here."
+      "note": "Obtain these Skills from their official distribution. Their implementation is not copied here."
     }
   ],
   "bundledSkills": [
@@ -83,8 +83,6 @@
       "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "path": "skills/productivity/writing-for-agents",
       "localPath": "skills/writing-for-ai",
-      "license": "MIT AND Apache-2.0",
-      "licenseFile": "skills/writing-for-ai/LICENSE.mattpocock",
       "modifications": [
         "重新编写面向 AI 的内容与知识写作方法，整合原 skill-builder、skill-creator 和 writing-for-agents 的职责。",
         "保留上游的信息层级、读取入口、就近组织与单一来源方法，采用中文重组表达，原文不再逐字分发。",
@@ -95,14 +93,10 @@
         {
           "source": "https://github.com/anthropics/skills",
           "path": "skills/skill-creator",
-          "license": "Apache-2.0",
-          "licenseFile": "skills/writing-for-ai/LICENSE.anthropic.txt",
           "note": "工具与评测资源沿用本仓库原 skill-creator 中持续演化的版本；未记录该来源的固定提交。"
         },
         {
           "source": "https://github.com/lzj960515/codex-workbench",
-          "license": "MIT",
-          "licenseFile": "skills/writing-for-ai/LICENSE",
           "note": "统一主稿、参考资料及本地工具修改由本仓库维护。"
         }
       ]
@@ -113,8 +107,6 @@
       "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "path": "skills/engineering/to-spec",
       "localPath": "skills/to-spec",
-      "license": "MIT",
-      "licenseFile": "skills/to-spec/LICENSE.mattpocock",
       "modifications": [
         "Preserves the seven-section specification template, implementation-decision categories, and prototype decision snippets.",
         "Enables natural-language invocation and creation or revision from existing conversations and linked decision records.",
@@ -129,8 +121,6 @@
       "revision": "3cca18b368ae95cdbdebbff572ccafa662551015",
       "path": "skills/engineering/prototype",
       "localPath": "skills/prototype",
-      "license": "MIT",
-      "licenseFile": "skills/prototype/LICENSE.mattpocock",
       "modifications": [
         "Preserves the upstream SKILL.md, LOGIC.md and UI.md structure, interactive single-file logic demonstrations, and in-context UI variant comparisons.",
         "Replaces blanket test prohibitions with direct checks proportionate to the experiment, and distinguishes model observations from real-system evidence.",
@@ -191,12 +181,6 @@
           "destination": "skills/wayfinder/references/local-tracker.md"
         }
       ],
-      "licenses": {
-        "deep-discussion": "skills/deep-discussion/LICENSE.mattpocock",
-        "architecture-design-review": "skills/architecture-design-review/LICENSE.mattpocock",
-        "wayfinder": "skills/wayfinder/LICENSE.mattpocock",
-        "improve-codebase-architecture": "skills/improve-codebase-architecture/LICENSE.mattpocock"
-      },
       "modifications": [
         "Grilling and domain modeling become references of deep-discussion, with existing document ownership and collaboration rules.",
         "Codebase design becomes a shared architecture reference, with evidence-based abstraction and test-retention decisions.",
@@ -297,9 +281,6 @@
           ]
         }
       ],
-      "licenses": {
-        "systematic-debugging": "skills/systematic-debugging/LICENSE.mattpocock"
-      },
       "modifications": [
         "Preserves selected upstream reproduction, minimization, falsifiable-hypothesis, instrumentation, regression-seam and cleanup passages verbatim, including original headings and numbering.",
         "Adds a local reference introduction; the existing systematic-debugging workflow owns task order, authorization and stopping conditions.",
@@ -338,9 +319,6 @@
           ]
         }
       ],
-      "licenses": {
-        "deep-discussion": "skills/deep-discussion/LICENSE.mattpocock"
-      },
       "modifications": [
         "Preserves the upstream questionnaire workflow, recipient knowledge-gap focus, completion criteria, document structure and question example; removes standalone skill frontmatter.",
         "Replaces only four passages: reuses known recipient context and intended outcomes instead of two mandatory interviews, follows existing document ownership, and includes deadlines only when agreed while labeling effort estimates.",

@@ -90,14 +90,11 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 ## 第三方内容
 
-仍由上游维护的第三方 Skills、Codrive 和文档处理 Skills 来源记录在 [`manifests/third-party-skills.json`](manifests/third-party-skills.json)，使用时遵循对应项目的许可证。
+仍由上游维护的第三方 Skills、Codrive 和文档处理 Skills 来源记录在 [`manifests/third-party-skills.json`](manifests/third-party-skills.json)。
 
-`writing-for-ai` 重新编写共同的写作方法，参考 Matt Pocock 的信息组织方法，并沿用本仓库原 `skill-creator` 中基于 Anthropic 版本演化的工程与评测资源。包内保留本仓库 MIT、Matt Pocock MIT 和 Anthropic Apache-2.0 许可证；来源与修改范围见[修改说明](skills/writing-for-ai/NOTICE.md)和来源清单。
+`writing-for-ai` 重新编写共同的写作方法，参考 Matt Pocock 的信息组织方法，并沿用本仓库原 `skill-creator` 中基于 Anthropic 版本演化的工程与评测资源。来源与修改范围见[来源清单](manifests/third-party-skills.json)。
 
-Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单，相关包保留 `LICENSE.mattpocock`。
+Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单。
 
 `to-spec` 保留上游的规格模板与原型决策表达，适配自动发现、已有文档归属、确认范围与后续动作授权；`deep-discussion` 和 `wayfinder` 在需要正式规格时按名称使用它。
 
-## 许可证
-
-[MIT](./LICENSE)

@@ -1,7 +1,6 @@
 ---
 name: writing-for-ai
 description: 编写、修改和组织面向 AI 的内容与知识，包括 Skill、AGENTS.md、CLAUDE.md、提示词和供 AI 查阅的文档。用户需要设计这些材料的职责与内容、改进表达和信息层级，或解决由材料造成的误触发、漏读、规则冲突与执行偏差时使用。
-license: MIT AND Apache-2.0
 ---
 
 # 面向 AI 的内容写作
