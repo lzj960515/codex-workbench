@@ -1,0 +1,4 @@
+interface:
+  display_name: "软件开发"
+  short_description: "围绕业务设计与实现代码，按需验证，并主动安排独立审查完成交付"
+  default_prompt: "请使用 $software-development 完成这项软件设计、实现或代码审查任务。"

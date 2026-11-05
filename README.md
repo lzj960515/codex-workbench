@@ -4,7 +4,7 @@
 
 ## 内容
 
-- `AGENTS.md`：用户级偏好、目标与授权边界、工程约束、按任务获取方法及长任务协作规则。
+- `AGENTS.md`：用户级偏好、目标与授权边界、修改原则、工程约束及长任务协作规则。
 - `hooks/task-handoff/`：上下文接近压缩时提醒更新任务状态，压缩后提醒恢复工作上下文。
 - `skills/`：自己维护的通用 Skills。
 - `manifests/third-party-skills.json`：第三方 Skills、参考材料及相关项目的来源、版本与修改范围。
@@ -32,7 +32,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 `--skills-mode` 和 `--agents-mode` 分别支持 `link`、`copy` 和 `skip`。只安装用户规则与 Hooks 时使用 `--skills-mode skip`；需要保留含私人内容的本机 `AGENTS.md` 时使用 `--agents-mode skip`，该文件不会进入仓库单一来源。Skill 聚合目录和 Codex 用户目录可以分别通过 `--skills-directory` 与 `--codex-home` 指定。
 
-更新到 `writing-for-ai` 后，安装器会在安装新入口时移除本仓库托管的旧 `skill-builder`、`skill-creator` 和 `writing-for-agents` 链接。旧名字若是独立目录、副本或指向其他来源的链接，安装会在写入前停止并保留内容；先核对并自行迁走这些旧内容，再重新安装。`--skills-mode skip` 保留全部现有 Skill。
+更新后，安装器会清理已退出的本仓库托管链接：`writing-for-ai` 替代 `skill-builder`、`skill-creator`、`writing-for-agents`；`software-development` 替代 `architecture-design-review`、`maintainable-implementation`、`test-driven-development`、`code-review`；原 `verification-before-completion` 的有效方法归入通用证据原则与对应任务流程。旧名字若是独立目录、副本或指向其他来源的链接，安装会在写入前停止并保留内容；先核对并自行迁走这些旧内容，再重新安装。`--skills-mode skip` 保留全部现有 Skill。
 
 公开仓库只保存适合公开、跨设备复用的内容。私人资料、机器专属绝对路径、密钥和内部项目知识保留在本机或对应项目中，不通过本仓库连接。
 
@@ -42,8 +42,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 | Skill | 用途 |
 | --- | --- |
-| [`architecture-design-review`](skills/architecture-design-review/) | 设计或审查框架、公共 API、核心基础设施和跨模块重构。 |
-| [`code-review`](skills/code-review/) | 审查候选、评估审查意见并在返工后复审，以真实交付风险推动结论收敛。 |
+| [`software-development`](skills/software-development/) | 围绕业务完成设计、实现、重构、业务测试与代码审查，代码完成后主动独立审查并交付。 |
 | [`align`](skills/align/) | 手动使用 `$align` 对齐意思和期望的处理程度，理解了就简短确认，有疑问就提问；默认不自动触发。 |
 | [`explain`](skills/explain/) | 手动使用 `$explain`，先用生活例子解释，再讲专业机制，最后给出三个理解检查问题；默认不自动触发。 |
 | [`breakdown`](skills/breakdown/) | 手动使用 `$breakdown`，拆解业务背景、要解决的问题和具体做法，理解关键选择与可迁移规律；默认不自动触发。 |
@@ -62,10 +61,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`to-spec`](skills/to-spec/) | 将已有讨论和决策地图中的确认内容整理为正式规格，明确行为、验收与未决事项。 |
 | [`wayfinder`](skills/wayfinder/) | 创建和恢复跨会话决策地图，跟踪依赖、未决事项与当前可推进的问题。 |
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |
-| [`maintainable-implementation`](skills/maintainable-implementation/) | 为普通代码改动选择合适的实现尺度、复用方式和职责边界。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
-| [`test-driven-development`](skills/test-driven-development/) | 按回归风险选择 TDD 或直接验证，并用失败测试保护高风险行为。 |
-| [`verification-before-completion`](skills/verification-before-completion/) | 在完成、提交、推送或发布前建立与声明相匹配的验证证据。 |
 | [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
 | [`source-repo-study`](skills/source-repo-study/) | 系统研究源码仓库，并整理成架构、功能和数据流 Wiki。 |
 | [`wiki-maintainer`](skills/wiki-maintainer/) | 持续摄取和修订 Markdown Wiki，维护索引、链接和知识一致性。 |
@@ -75,6 +71,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 `drawio` 和 `mindmap` 需要安装 draw.io Desktop，并让 `drawio` 命令可以从终端调用。
 
 `writing-for-ai` 整合原三个写作 Skill，保留已有的工程与评测工具；替换依据和验证边界见[采用记录](docs/changes/2026-11-04-writing-for-ai.md)。
+
+软件开发与异常调查分别由 `software-development` 和 `systematic-debugging` 承担。个人规则不重复维护 Skill 选用目录；收尾在对应任务中复用有效证据。相关调整见[调试与交付方法整理](docs/changes/2026-11-05-debugging-and-delivery.md)。
 
 ## Hooks 清单
 
@@ -94,7 +92,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 `writing-for-ai` 重新编写共同的写作方法，参考 Matt Pocock 的信息组织方法，并沿用本仓库原 `skill-creator` 中基于 Anthropic 版本演化的工程与评测资源。来源与修改范围见[来源清单](manifests/third-party-skills.json)。
 
-Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法由 `architecture-design-review/references/` 维护并供实现技能共享。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单。
+Matt Pocock 的追问、领域建模与对外确认问卷方法由 `deep-discussion/references/` 承载；代码设计方法重组到 `software-development/references/design-and-implementation.md`，按真实职责和业务需要使用。`wayfinder` 和 `improve-codebase-architecture` 保留独立入口并适配本体系。来源与逐文件映射见来源清单。
 
 `to-spec` 保留上游的规格模板与原型决策表达，适配自动发现、已有文档归属、确认范围与后续动作授权；`deep-discussion` 和 `wayfinder` 在需要正式规格时按名称使用它。
 

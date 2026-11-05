@@ -49,52 +49,39 @@ class SkillContractTest(unittest.TestCase):
             with self.subTest(contract=contract):
                 self.assertIn(contract, package)
 
-    def test_tdd_skill_preserves_risk_based_verification_contracts(self) -> None:
-        package = read_skill_package("test-driven-development")
+    def test_software_development_preserves_risk_based_verification_contracts(self) -> None:
+        package = read_skill_package("software-development")
         required_contracts = (
-            "用户明确要求 TDD 或先写测试时始终使用",
-            "业务分支与计算规则",
-            "公共 API 或事件契约",
-            "并发与乱序",
-            "优先使用直接验证",
-            "能由 build、typecheck、lint、配置渲染或调用检查完整证明",
-            "选择与风险相称的验证方式",
-            "决定不新增测试后",
-            "测试数量服从风险覆盖",
+            "用户明确要求 TDD 或先写测试时",
+            "测试保护已确认的业务结果",
+            "已有测试能够保护受影响行为时",
+            "选择充分且成本合适的方式",
+            "机械接线",
+            "禁止为这些内容编写框架层面的测试",
+            "生产依赖、接口与行为由真实业务和运行生命周期决定",
         )
 
         for contract in required_contracts:
             with self.subTest(contract=contract):
                 self.assertIn(contract, package)
 
-    def test_code_review_unifies_candidate_feedback_and_rereview_contracts(self) -> None:
-        package = read_skill_package("code-review")
+    def test_software_development_unifies_candidate_feedback_and_rereview_contracts(self) -> None:
+        package = read_skill_package("software-development")
         required_contracts = (
-            "资深维护者",
-            "候选审查",
-            "接收审查意见",
+            "只审查代码、分支或合并请求",
+            "处理审查意见",
             "复审",
-            "真实交付阻塞",
-            "业务约束",
-            "支持的输入路径",
-            "代码层面可以构造",
-            "代码审查不是找缺陷的竞赛",
-            "发现的问题数量",
-            "业务结果",
-            "审查问题准入检查",
-            "受支持生产者",
-            "交付影响",
-            "必要性与授权问题",
-            "代码审查的默认产物",
-            "批准",
+            "主动启动一位独立审查子 Agent",
+            "准确批准与准确退回具有同等价值",
+            "代码层面可构造的状态只是调查线索",
+            "受支持入口",
+            "模型、职责与范围问题",
+            "授权问题",
             "修改",
             "回复",
             "请求产品决定",
-            "重新判断",
             "反证",
-            "architecture-design-review",
             "systematic-debugging",
-            "verification-before-completion",
         )
 
         for contract in required_contracts:
@@ -108,22 +95,16 @@ class SkillContractTest(unittest.TestCase):
                 "让设计意图落实到内容和使用方式中",
                 "正确停止方式",
             ),
-            "maintainable-implementation": (
-                "smallest complete boundary",
-                "A direct local implementation is a successful result",
-                "single lowest-cost check that directly proves it",
+            "software-development": (
+                "总体成本",
+                "普通方法已经能完整承载时直接实现",
+                "已有证据足够时复用",
             ),
             "systematic-debugging": (
                 "根因已确认",
                 "主要假设",
                 "证据不足",
                 "只诊断",
-            ),
-            "verification-before-completion": (
-                "本地实现或文档完成",
-                "已推送",
-                "制品已发布",
-                "线上行为已验证",
             ),
         }
 
@@ -132,6 +113,18 @@ class SkillContractTest(unittest.TestCase):
             for contract in required_contracts:
                 with self.subTest(skill=skill_name, contract=contract):
                     self.assertIn(contract, package)
+
+        user_rules = (REPOSITORY_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        for contract in ("直接证据", "复用仍有效", "未验证"):
+            with self.subTest(document="AGENTS.md", contract=contract):
+                self.assertIn(contract, user_rules)
+
+        delivery = (
+            SKILLS_ROOT / "software-development" / "references" / "delivery.md"
+        ).read_text(encoding="utf-8")
+        for contract in ("已提交、已推送", "制品", "部署", "线上"):
+            with self.subTest(document="delivery.md", contract=contract):
+                self.assertIn(contract, delivery)
 
     def test_removed_quality_skills_are_not_recommended(self) -> None:
         manifest_path = REPOSITORY_ROOT / "manifests" / "third-party-skills.json"
@@ -142,16 +135,25 @@ class SkillContractTest(unittest.TestCase):
         self.assertNotIn("typeorm", names)
         self.assertNotIn("skill-creator", names)
         self.assertTrue((SKILLS_ROOT / "writing-for-ai" / "SKILL.md").is_file())
-        for retired_skill in ("skill-builder", "skill-creator", "writing-for-agents"):
+        for retired_skill in (
+            "skill-builder",
+            "skill-creator",
+            "writing-for-agents",
+            "architecture-design-review",
+            "maintainable-implementation",
+            "test-driven-development",
+            "code-review",
+            "verification-before-completion",
+        ):
             with self.subTest(retired_skill=retired_skill):
                 self.assertFalse((SKILLS_ROOT / retired_skill).exists())
 
-    def test_code_review_replaces_the_receiving_only_skill(self) -> None:
-        self.assertTrue((SKILLS_ROOT / "code-review" / "SKILL.md").is_file())
+    def test_software_development_is_the_documented_engineering_entrypoint(self) -> None:
+        self.assertTrue((SKILLS_ROOT / "software-development" / "SKILL.md").is_file())
         self.assertFalse((SKILLS_ROOT / "receiving-code-review").exists())
 
         readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("[`code-review`](skills/code-review/)", readme)
+        self.assertIn("[`software-development`](skills/software-development/)", readme)
         self.assertNotIn("receiving-code-review", readme)
 
     def test_wiki_maintainer_preserves_persistent_knowledge_contracts(self) -> None:

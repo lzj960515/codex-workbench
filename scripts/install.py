@@ -13,7 +13,16 @@ from typing import Callable, Optional
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SKILLS_ROOT = REPOSITORY_ROOT / "skills"
-REPLACED_SKILL_NAMES = ("skill-builder", "skill-creator", "writing-for-agents")
+REPLACED_SKILL_NAMES = (
+    "skill-builder",
+    "skill-creator",
+    "writing-for-agents",
+    "architecture-design-review",
+    "maintainable-implementation",
+    "test-driven-development",
+    "code-review",
+    "verification-before-completion",
+)
 IGNORED_NAMES = {".DS_Store", "__pycache__"}
 IGNORED_SUFFIXES = {".dtmp", ".pyc"}
 

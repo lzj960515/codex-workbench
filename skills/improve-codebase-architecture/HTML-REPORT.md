@@ -35,21 +35,21 @@ Use this reference when the comparison warrants an HTML report. Store it under t
 
 ## Header
 
-Repo name, date, and a compact legend: solid box = module, dashed line = seam, red arrow = leakage, thick dark box = deep module. No introduction paragraph. Straight into the candidates.
+Repo name, date, and a compact legend: solid box = module, dashed line = seam, red arrow = leakage, thick dark box = the module owning the consolidated responsibility. No introduction paragraph. Straight into the candidates.
 
 ## Candidate card
 
-The diagrams carry the weight. Prose is sparse, plain, and uses the glossary terms (from the shared Codebase Design reference) without ceremony.
+图形承担主要解释，文字简短直接。沿用项目的业务与框架词汇，依据[设计与实现判断](../software-development/references/design-and-implementation.md) 表达职责、调用方契约和复杂性归属。
 
 Each candidate is one `<article>`:
 
-- **Title**: short, names the deepening (e.g. "Collapse the Order intake pipeline").
-- **Badge row**: recommendation strength (`Strong` = emerald, `Worth exploring` = amber, `Speculative` = slate), plus a tag for the dependency category (`in-process`, `local-substitutable`, `ports & adapters`, `mock`).
+- **标题**：简短说明职责调整，例如“将订单接收规则集中到订单入口”。
+- **徽标行**：推荐强度（`Strong` = emerald、`Worth exploring` = amber、`Speculative` = slate），需要时标注实际受影响的职责或依赖。
 - **Files**: monospaced list, `font-mono text-sm`.
 - **Before / After diagram**: the centrepiece. Two columns, side by side. See patterns below.
 - **Problem**: one sentence. What hurts.
 - **Solution**: one sentence. What changes.
-- **Wins**: bullets, ≤6 words each. e.g. "Tests hit one interface", "Pricing logic stops leaking", "Delete 4 shallow wrappers".
+- **收益**：用短句说明具体变化，例如“计价规则集中维护”“调用方直接提交订单”“退出冗余转发层”。
 - **ADR callout** (if applicable): one line in an amber-tinted box.
 
 No paragraphs of explanation. If the diagram needs a paragraph to be understood, redraw the diagram.
@@ -60,7 +60,7 @@ Pick the pattern that fits the candidate. Mix them. Don't make every diagram loo
 
 ### Mermaid graph (the workhorse for dependencies / call flow)
 
-Use a Mermaid `flowchart` or `graph` when the point is "X calls Y calls Z, and look at the mess." Wrap it in a Tailwind-styled card so it doesn't feel parachuted in. Style with classDef to colour leakage edges red and the deep module dark. Sequence diagrams work well for "before: 6 round-trips; after: 1."
+Use a Mermaid `flowchart` or `graph` when the point is "X calls Y calls Z, and look at the mess." Wrap it in a Tailwind-styled card so it doesn't feel parachuted in. Style with classDef to colour leakage edges red and the responsibility-owning module dark. Sequence diagrams work well for "before: 6 round-trips; after: 1."
 
 ```html
 <div class="rounded-lg border border-slate-200 bg-white p-4">
@@ -77,15 +77,15 @@ Use a Mermaid `flowchart` or `graph` when the point is "X calls Y calls Z, and l
 
 ### Hand-built boxes-and-arrows (when Mermaid's layout fights you)
 
-Modules as `<div>`s with borders and labels. Arrows as inline SVG `<line>` or `<path>` elements positioned absolutely over a relative container. Reach for this when you want the "after" diagram to feel like one thick-bordered deep module with greyed-out internals, since Mermaid won't render that with the right weight.
+Modules as `<div>`s with borders and labels. Arrows as inline SVG `<line>` or `<path>` elements positioned absolutely over a relative container. Reach for this when you want the "after" diagram to show one thick-bordered responsibility-owning module with greyed-out internals, since Mermaid won't render that with the right weight.
 
-### Cross-section (good for layered shallowness)
+### Cross-section (good for redundant layers)
 
 Stack horizontal bands (`h-12 border-l-4`) to show layers a call passes through. Before: 6 thin layers each doing nothing. After: 1 thick band labelled with the consolidated responsibility.
 
-### Mass diagram (good for "interface as wide as implementation")
+### Mass diagram (showing caller obligations and implementation)
 
-Two rectangles per module: one for interface surface area, one for implementation. Before: interface rectangle is nearly as tall as the implementation rectangle (shallow). After: interface rectangle is short, implementation rectangle is tall (deep).
+每个模块用两个矩形分别示意调用方需要掌握的接口与内部实现。对比前后时标出哪些细节被职责所有者承接；矩形大小只是示意，接口或方法减少本身不证明设计更好。
 
 ### Call-graph collapse
 
@@ -105,19 +105,19 @@ One larger card. Candidate name, one sentence on why, anchor link to its card. T
 
 ## Tone
 
-Use the user's language, concise explanations, and the definitions in [Codebase Design](../architecture-design-review/references/codebase-design.md). Preserve the project's concrete domain and framework names.
+使用用户的语言、简洁说明与[设计与实现判断](../software-development/references/design-and-implementation.md)，保留项目具体的领域与框架名称。
 
-**Keep meanings consistent:** module, interface, implementation, depth, deep, shallow, seam, adapter, leverage, locality.
+**保持概念含义一致：** 业务动作、模块职责、接口、实现、生命周期、依赖与调用方需要掌握的条件。按真实职责解释封装，按业务变化说明复杂性集中在哪里。
 
 Distinguish a concrete code symbol (such as a Service or API) from the design role being evaluated; clarify overloaded terms when the distinction matters.
 
 **Phrasings that fit the style:**
 
-- "Order intake module is shallow: interface nearly matches the implementation."
-- "Pricing leaks across the seam."
-- "Deepen: one interface, one place to test."
-- "Two adapters justify the seam: HTTP in prod, in-memory in tests."
+- “订单调用方仍需安排三次内部校验。”
+- “计价规则散落在两个调用方。”
+- “订单入口统一承担校验与计价。”
+- “不同提供方的实际协议差异由现有适配器隔离。”
 
-**Wins bullets** name the gain in glossary terms: *"locality: bugs concentrate in one module"*, *"leverage: one interface, N call sites"*, *"interface shrinks; implementation absorbs the wrappers"*. Explain which change, caller obligation, or test improves; a claim such as *"easier to maintain"* needs that concrete reason.
+**收益短句**说明实际业务变化与维护收益：哪些规则集中修改、调用方减少了哪些协调、哪些旧分支可以退出，以及约定行为如何验证。“更容易维护”需要具体原因。生产职责与运行契约决定边界，测试利用已有边界，不以测试替身或测试数量证明新增接口的必要性。
 
 No hedging, no throat-clearing, no "it's worth noting that…". If a sentence could be a bullet, make it a bullet. If a bullet could be cut, cut it. Choose established domain and design terms before inventing a new one.

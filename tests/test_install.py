@@ -49,12 +49,13 @@ class InstallerTest(unittest.TestCase):
         shutil.copy2(INSTALLER, repository / "scripts" / "install.py")
         shutil.copy2(REPOSITORY_ROOT / "AGENTS.md", repository / "AGENTS.md")
         shutil.copytree(REPOSITORY_ROOT / "hooks", repository / "hooks")
-        skill_directory = repository / "skills" / "writing-for-ai"
-        skill_directory.mkdir(parents=True)
-        (skill_directory / "SKILL.md").write_text(
-            "---\nname: writing-for-ai\ndescription: Write AI context.\n---\n",
-            encoding="utf-8",
-        )
+        for name in ("writing-for-ai", "software-development"):
+            skill_directory = repository / "skills" / name
+            skill_directory.mkdir(parents=True)
+            (skill_directory / "SKILL.md").write_text(
+                f"---\nname: {name}\ndescription: A merged Skill.\n---\n",
+                encoding="utf-8",
+            )
         return repository
 
     def test_merged_skill_replaces_only_repository_owned_legacy_links(self) -> None:
@@ -65,7 +66,16 @@ class InstallerTest(unittest.TestCase):
                     repository = self.make_merged_skills_repository(root)
                     codex_home, skills_directory = self.make_installation_paths(root)
                     skills_directory.mkdir(parents=True)
-                    legacy_names = ("skill-builder", "skill-creator", "writing-for-agents")
+                    legacy_names = (
+                        "skill-builder",
+                        "skill-creator",
+                        "writing-for-agents",
+                        "architecture-design-review",
+                        "maintainable-implementation",
+                        "test-driven-development",
+                        "code-review",
+                        "verification-before-completion",
+                    )
                     for name in legacy_names:
                         (skills_directory / name).symlink_to(repository / "skills" / name)
                     unrelated = skills_directory / "personal-skill"
@@ -79,9 +89,10 @@ class InstallerTest(unittest.TestCase):
                         installer=repository / "scripts" / "install.py",
                     )
 
-                    installed = skills_directory / "writing-for-ai"
-                    self.assertTrue((installed / "SKILL.md").is_file())
-                    self.assertEqual(skills_mode == "link", installed.is_symlink())
+                    for name in ("writing-for-ai", "software-development"):
+                        installed = skills_directory / name
+                        self.assertTrue((installed / "SKILL.md").is_file())
+                        self.assertEqual(skills_mode == "link", installed.is_symlink())
                     for name in legacy_names:
                         self.assertFalse((skills_directory / name).is_symlink())
                         self.assertFalse((skills_directory / name).exists())
@@ -321,7 +332,7 @@ class InstallerTest(unittest.TestCase):
                         (conflicting / "SKILL.md").read_text(encoding="utf-8"),
                     )
                     self.assertFalse(
-                        (skills_directory / "architecture-design-review").exists()
+                        (skills_directory / "software-development").exists()
                     )
 
     def test_link_to_another_source_is_preserved_as_a_conflict(self) -> None:

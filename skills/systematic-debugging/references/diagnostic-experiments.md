@@ -1,76 +1,57 @@
-# 复现与实验方法
+# 按证据缺口选择调查方法
 
-本页用于构造或改进复现、缩减输入、选择诊断实验，以及清理本次临时诊断产物。以下为上游原文选段，阶段号和列表编号保留原样；任务顺序、授权与停止条件由主 Skill 决定。
+已有源码、配置与记录足以解释异常时，直接使用这些证据。需要补足特定事实时，从下面选择相应方法；方法是否采用、检查到什么程度，由业务问题、当前证据与授权决定。
 
-## Redact
+## 保护证据与运行边界
 
-This skill has you show commands, outputs and captured artifacts. **Redact every secret first**: write `<REDACTED>` in its place. Build loops against env vars, so the credential stays in the environment rather than in what you show. Captured artifacts carry auth headers: quote only the lines that carry the signal.
+保留原始输入、业务方确认的预期、归档和运行记录，记录与结论有关的对象、时间、环境及版本。脱敏副本与诊断产物按项目任务目录保存，和原始材料区分。
 
-## Phase 1: Build a feedback loop
+展示命令、日志和请求前去除令牌、认证头等敏感值，只引用能说明问题的部分。凭据通过现有安全存储或环境变量取得，避免进入命令展示与诊断产物。
 
-### Ways to construct one, in roughly this order
+重放和观测先核实可能产生的写入、消息投递、支付或外部调用，优先使用受控副本与当前允许的环境。需要线上动作时，沿相应操作能力和已有授权执行。
 
-1. **Failing test** at whatever seam reaches the bug: unit, integration, e2e.
-2. **Curl / HTTP script** against a running dev server.
-3. **CLI invocation** with a fixture input, diffing stdout against a known-good snapshot.
-4. **Headless browser script** (Playwright / Puppeteer) that drives the UI and asserts on DOM/console/network.
-5. **Replay a captured trace.** Save a real network request / payload / event log to disk; replay it through the code path in isolation.
-6. **Throwaway harness.** Spin up a minimal subset of the system (one service, mocked deps) that exercises the bug code path with a single function call.
+## 用正常路径判断差异来自哪里
 
-8. **Bisection harness.** If the bug appeared between two known states (commit, dataset, version), automate "boot at state X, check, repeat" so you can `git bisect run` it.
-9. **Differential loop.** Run the same input through old-version vs new-version (or two configs) and diff outputs.
+不知道异常路径在哪一段不同，可以选同类成功请求、正常租户、相邻成功任务、稳定版本或已知有效输入作为对照。先确认两边的业务条件可比，再比较与疑点有关的输入、配置、数据、时序或资源状态。
 
-### Tighten the loop
+控制差异使结果可解释，例如相同事件只改变查询环境。一次存在多项变化时，保留混杂因素，继续核实会改变判断的部分。对照用于区分具体解释，不要求比较所有字段或遍历所有环境。
 
-Treat the loop as a product. Once you have _a_ loop, **tighten** it:
+## 在受控环境重放原始问题
 
-- Can I make it faster? (Cache setup, skip unrelated init, narrow the test scope.)
-- Can I make the signal sharper? (Assert on the specific symptom, not "didn't crash".)
-- Can I make it more deterministic? (Pin time, seed RNG, isolate filesystem, freeze network.)
+当实际调用结果能够补足因果证据，或用户需要可重复检查时，选择能到达问题位置的现有测试、命令行、HTTP 调用、浏览器操作或归档事件重放。缺少现成入口时，可在授权的任务目录建立调用真实代码的诊断脚本；构造数据和替身只替代当前无法使用的外部边界。
 
-A 30-second flaky loop is barely better than no loop; a 2-second deterministic one is tight, a debugging superpower.
+预期结果来自业务契约、已确认提交清单或独立的正确例子。检查真实症状，例如条目是否遗漏、状态是否错误或耗时是否超过有效约定；仅确认没有崩溃不足以解释业务问题。诊断脚本调用被调查实现，保留与用户原始现象的对应关系。
 
-## Phase 2: Reproduce + minimise
+偶发问题记录每次可观察到的结果与条件，根据是否仍需区分原因决定重复次数。不能稳定复现时，保留复现范围与局限，结合历史记录继续判断。
 
-Run the loop. Watch it go red as the bug appears.
+## 缩小触发范围
 
-Confirm:
+输入或依赖过多、尚不清楚哪些条件触发偏离时，逐次移除无关条目、步骤或配置，检查原来的业务症状是否仍存在。只缩到能够解释机制、区分原因的程度；当前输入已经清楚时保留它。
 
-- [ ] The loop produces the failure mode the **user** described, not a different failure that happens to be nearby. Wrong bug = wrong fix.
-- [ ] The failure is reproducible across multiple runs (or, for non-deterministic bugs, reproducible at a high enough rate to debug against).
-- [ ] You have captured the exact symptom (error message, wrong output, slow timing) so later phases can verify the fix actually addresses it.
+缩减应保留关键调用关系、时序与业务语义。比如不同条目被误判为同一条，需要同时保留不同条目与合法重传的区别；把它们删成单条后没有报错，不能证明原问题已经解决。
 
-### Minimise
+原始完整场景独立保存。简化输入给出的是机制证据，最终修复还要回查原始问题。
 
-Once it's red, shrink the repro to the **smallest scenario that still goes red**. Cut inputs, callers, config, data, and steps **one at a time**, re-running the loop after each cut, and keep only what's load-bearing for the failure.
+## 通过版本或状态对照定位变化
 
-Why bother: a minimal repro shrinks the hypothesis space in Phase 3 (fewer moving parts left to suspect) and becomes the clean regression test in Phase 5.
+问题出现在两个已知版本、配置或数据状态之间时，让同一输入在可比环境中执行，核对结果差异。变化范围较大且检查可重复时，可使用版本二分缩小引入点；环境、数据和依赖差异仍需单独核实。
 
-## Phase 3: Hypothesise
+某次提交与异常同时出现只是线索。结合实际代码、状态变化和调用路径解释它如何造成业务偏离，再判断因果。
 
-Each hypothesis must be **falsifiable**: state the prediction it makes.
+## 让候选解释给出可核实的预期
 
-> Format: "If <X> is the cause, then <changing Y> will make the bug disappear / <changing Z> will make it worse."
+存在竞争解释时，说明“如果原因是这个，应在什么记录、状态或调用结果中看到什么；什么结果会削弱它”。优先读取能够区分解释的现有证据，需要时再安排受控对照。
 
-If you cannot state the prediction, the hypothesis is a vibe: discard or sharpen it.
+检查前明确不同结果会改变什么判断，检查后据实更新。已有证据已经确认机制时直接收敛；证据不足以区分时，说明缺少哪一环，而非用更多猜测补全故事。
 
-## Phase 4: Instrument
+## 在关键边界补充观测
 
-Tool preference:
+当前记录无法说明数据何时丢失、状态何时改变或等待发生在哪里时，在这些具体边界选择查询、调试器、REPL 或临时日志。只取得能够回答当前问题的信息，避免为调查建立一套新的长期监控责任。
 
-1. **Debugger / REPL inspection** if the env supports it. One breakpoint beats ten logs.
-2. **Targeted logs** at the boundaries that distinguish hypotheses.
-3. Never "log everything and grep".
+关联同一对象的进入与离开、前后状态和必要数量，说明观测是否改变了时序或运行条件。临时日志带可识别标记，后续能够准确清理本次增加的内容；保护敏感数据，沿用已有的日志与访问边界。
 
-**Tag every debug log** with a unique prefix, e.g. `[DEBUG-a4f2]`. Cleanup at the end becomes a single grep. Untagged logs survive; tagged logs die.
+## 回查原始问题并收尾
 
-## Phase 5: Fix + regression test
+动作后以原始业务结果核对变化，必要时重跑完整归档或原始调用场景。缩减重放、单个内部调用和本地快照分别只证明其覆盖范围；代码修复的回归保护、验证、独立审查和交付由 `software-development` 完成。
 
-A correct seam is one where the test exercises the **real bug pattern** as it occurs at the call site. If the only available seam is too shallow (single-caller test when the bug needs multiple callers, unit test that can't replicate the chain that triggered the bug), a regression test there gives false confidence.
-
-5. Re-run the Phase 1 feedback loop against the original (un-minimised) scenario.
-
-## Phase 6: Cleanup
-
-- [ ] All `[DEBUG-...]` instrumentation removed (`grep` the prefix)
-- [ ] Throwaway prototypes deleted (or moved to a clearly-marked debug location)
+清理本次临时调试日志、断点和不再需要的试验文件，保留原始证据。用户要求保留的可重跑诊断脚本放在约定目录，说明输入、运行命令、预期现象和适用范围，区分诊断产物与生产实现。

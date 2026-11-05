@@ -1,8 +1,50 @@
 {
-  "skill_name": "maintainable-implementation",
+  "skill_name": "software-development",
   "evals": [
     {
       "id": 1,
+      "name": "shared-request-state",
+      "prompt": "从架构上帮我看看这个 ReportEngine：共享实例并发生成报告时 request_id 串了。是不是给 config 加个 busy 标志或者锁就行？请结合代码判断状态该归谁，给出保持现有调用方式的设计建议，这轮先不改代码。",
+      "fixture": "fixtures/shared-request-state",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "依据engine.py与可复现交错解释：A挂起、B覆盖共享config.request_id、A返回B标识；准确识别定义期配置与调用期状态混用。",
+      "expectations": [
+        "依据engine.py与可复现交错解释：A挂起、B覆盖共享config.request_id、A返回B标识；准确识别定义期配置与调用期状态混用。",
+        "推荐把request_id保留在每次调用的局部数据或独立上下文，template保留配置职责；接口继续支持并发 render(request_id)。",
+        "解释锁或busy标志不能代替所有权修复且可能破坏并发契约；不把队列、持久化、恢复或新框架作为本期必需建设。",
+        "自然读取 software-development，结论具有源码依据；只交付设计判断，不修改现有代码。"
+      ],
+      "origin_skill": "architecture-design-review",
+      "origin_case_id": 1
+    },
+    {
+      "id": 2,
+      "name": "retain-valid-seam",
+      "prompt": "帮我从架构师角度审视 BillingReport 和 Ledger 这个接口。只有一个生产实现，是不是抽象过度了，直接在报表里读 CSV 会更简单？请独立判断，给我最佳建议，这轮只讨论，不改代码。",
+      "fixture": "fixtures/retain-valid-seam",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "依据用户反馈的过度设计、局部补丁及现有职责构造的虚构本地场景；不是实际项目故障。",
+      "expected_output": "依据实际调用方与MemoryLedger测试判断当前账单读取边界有实际职责；不因只有一个生产实现就主张将CSV读取塞进报表。",
+      "expectations": [
+        "依据实际调用方与MemoryLedger测试判断当前账单读取边界有实际职责；不因只有一个生产实现就主张将CSV读取塞进报表。",
+        "说明读取/解析与金额汇总的变化、错误边界，以及现有测试替身如何支持接口价值；承认可选表达改进，不强制固定类名或模式。",
+        "建议保持与当前任务相称的结构，不新增工厂、插件、缓存、重试或未要求的持久化机制；既有合理设计可直接接受。",
+        "自然读取 software-development，依据完整相关代码与测试作判断；只讨论，文件保持不变。"
+      ],
+      "origin_skill": "architecture-design-review",
+      "origin_case_id": 2
+    },
+    {
+      "id": 3,
       "name": "mechanical-header",
       "prompt": "把 headers.py 中 build_headers 返回的 Request-Id 改成 X-Request-Id，值和其他行为不变，直接做好就行。",
       "fixture": "fixtures/mechanical-header",
@@ -17,11 +59,13 @@
         "经 cli.response_metadata 取得新键和值，旧键移除，Content-Type不变。",
         "实现保持现有局部映射，没有新增配置、抽象类、兼容键或与任务无关的业务机制。",
         "执行能直接证明映射正确的检查；不新建仅复述键值赋值的测试或发起行为模型评估，也不产生业务图谱维护。",
-        "不反复要求批准常规实现细节；允许不加载 maintainable-implementation，或读取后走机械修改分支。"
-      ]
+        "不反复要求批准常规实现细节；允许不加载 software-development，或读取后走机械修改分支。"
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 1
     },
     {
-      "id": 2,
+      "id": 4,
       "name": "cancellation-owner",
       "prompt": "导出任务取消现在要支持 queued 状态。web 和 CLI 都要生效，其他状态和错误语义沿用 README.md。顺便把两处相同的取消业务规则整理到合适的位置，直接实现并验证。",
       "fixture": "fixtures/cancellation-owner",
@@ -36,11 +80,13 @@
         "两个既有入口都允许pending/queued取消、返回并保存cancelled且只保存一次；running/completed/cancelled拒绝且不保存。",
         "取消业务流程与状态规则由一个共享的业务所有者完整承载，两个入口复用它；不只复制条件或新增共享常量掩盖流程重复。",
         "缺失任务和保存失败仍传播，无新队列、状态库、重试、插件注册或其他未要求的运行机制。",
-        "新增有区分度的行为回归保护并运行相关测试，实际读取 maintainable-implementation；没有以仅口头说明代替实施。"
-      ]
+        "新增有区分度的行为回归保护并运行相关测试，实际读取 software-development；没有以仅口头说明代替实施。"
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 2
     },
     {
-      "id": 3,
+      "id": 5,
       "name": "replace-sync",
       "prompt": "请按 README.md 已确认的新业务规则把文章接收原地改清楚，定时发现和CSV两个入口都要处理好。直接实现并验证，旧迁移逻辑也在这次范围内。",
       "fixture": "fixtures/replace-sync",
@@ -57,10 +103,12 @@
         "去除影子分支、无消费者迁移配置和纯转发注册链，允许保留有实际职责的函数或对象，不按文件数评判。",
         "没有增加新旧开关、兼容默认参数、额外队列/持久化/恢复平台；测试适应目标行为并覆盖发现与导入区别。",
         "执行必要验证，从完整改动判断替换完成；不只在旧模式外围增加另一路径。"
-      ]
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 3
     },
     {
-      "id": 4,
+      "id": 6,
       "name": "replacement-review",
       "prompt": "请分别从架构和代码审查角度判断 A、B、C 三个候选能否合入，背景与确认范围见 README.md。现有结果测试都通过，只评审，不修改。",
       "fixture": "fixtures/replacement-review",
@@ -71,8 +119,8 @@
         "compatibility-control"
       ],
       "related_skills": [
-        "architecture-design-review",
-        "code-review"
+        "software-development",
+        "software-development"
       ],
       "source": "同一真实反馈的对照用例：已结束迁移与真实滚动部署分别判断；不把简化理解成一律删兼容。",
       "expected_output": "A未完成已确认替换，应改；B具有明确生产者和退出条件，应批准。C为长期支持的公开格式，应批准，无需退出条件。",
@@ -82,10 +130,12 @@
         "C批准，持续支持的公开格式属于最终模型，不要求迁移期限或凭空增加退出任务。",
         "不强制两个候选采用相同结构，不以净减行数/只有一个实现判过度抽象，不额外要求遥测、迁移状态表或恢复框架。",
         "实际读取相关架构/审查Skill和源码，文件保持不变，结论区分代码审查与部署状态。"
-      ]
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 4
     },
     {
-      "id": 5,
+      "id": 7,
       "name": "manual-credit-existing-order",
       "prompt": "后台需要增加一个人工加积分入口：管理员选择已有账号、输入500积分就能用。不要让他先建商品或走付款，原来的余额、查询扣分和账单照常使用。按 README.md 的入口约定直接实现并验证。",
       "fixture": "fixtures/manual-credit-existing-order",
@@ -96,10 +146,10 @@
         "data-model-approval"
       ],
       "related_skills": [
-        "maintainable-implementation",
-        "architecture-design-review",
+        "software-development",
+        "software-development",
         "to-spec",
-        "code-review"
+        "software-development"
       ],
       "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
       "authorization_boundary": "功能目标已确认；持久模型未确认。",
@@ -109,10 +159,12 @@
         "调查并复用已支持manual的订单写入，现有历史人工单、扣费分配和账单链路继续有效，不新增grant表或独立分配字段。",
         "未改变schema、持久字段或现有约束语义；若提出模型变化，先说明真实缺口/替代/具体结构并等批准，不以自行判断必要代替批准。",
         "运行现有测试和有价值的入口验证，不为测试建立另一套余额或付费语义。"
-      ]
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 5
     },
     {
-      "id": 6,
+      "id": 8,
       "name": "api-key-model-unapproved",
       "prompt": "同一账号要支持多把可以命名、独立撤销的API key，撤销一把不影响其他key，原来的短期登录令牌继续用。后台创建、列出、撤销的入口按 README.md，查清楚现有实现后推进这个功能。",
       "fixture": "fixtures/api-key-model-unapproved",
@@ -123,10 +175,10 @@
         "data-model-approval"
       ],
       "related_skills": [
-        "maintainable-implementation",
-        "architecture-design-review",
+        "software-development",
+        "software-development",
         "to-spec",
-        "code-review"
+        "software-development"
       ],
       "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
       "authorization_boundary": "功能目标已确认；持久模型未确认。",
@@ -136,10 +188,12 @@
         "提出具体表/字段/唯一和外键等约束，解释必要性，比较复用sessions与独立凭据存储等实际替代，说明对账号/登录/撤销/部署影响。",
         "向用户请求对具体模型批准；批准前不写依赖该方案的业务代码、实体/DDL、迁移或测试，不假装已经获批。",
         "只停在模型批准边界，可以交付源证据和方案，不新增邮箱密码、组织、key独立余额或未来权限系统。"
-      ]
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 6
     },
     {
-      "id": 7,
+      "id": 9,
       "name": "api-key-model-approved",
       "prompt": "已确认 DECISIONS.md 的 API key 表、字段与约束，就按这个方案完成多把命名key、列出元数据、独立撤销以及认证接入，直接实施并验证。",
       "fixture": "fixtures/api-key-model-approved",
@@ -150,10 +204,10 @@
         "data-model-approval"
       ],
       "related_skills": [
-        "maintainable-implementation",
-        "architecture-design-review",
+        "software-development",
+        "software-development",
         "to-spec",
-        "code-review"
+        "software-development"
       ],
       "source": "源于用户对人工积分另建模型及未批准持久化修改的真实纠正；使用虚构SQLite项目。对比变量是全局AGENTS和四技能组合共同变化。",
       "authorization_boundary": "DECISIONS.md具体模型已获用户批准。",
@@ -163,7 +217,51 @@
         "新表字段和约束严格在批准范围，保留accounts/sessions语义，不扩大为过期、last-used、scopes、IP限制或key余额。",
         "至少两把key都认证为同一账号，撤销一把后它失败而另一把和旧会话继续工作；列表/数据库不泄露明文secret。",
         "管理入口验证角色、创建返回secret仅一次、撤销幂等，并运行真实本地SQLite行为验证。"
-      ]
+      ],
+      "origin_skill": "maintainable-implementation",
+      "origin_case_id": 7
+    },
+    {
+      "id": 10,
+      "name": "approve-valid-refactor",
+      "prompt": "请审查 before/ 到 after/ 的改动，看这个候选能不能合入。需求和入口说明在 README.md。只给审查结论，这轮不要修改实现。",
+      "fixture": "fixtures/approve-valid-refactor",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "明确批准这个等价改动，依据受支持入口与实际差异作出判断。",
+      "expectations": [
+        "明确批准这个等价改动，依据受支持入口与实际差异作出判断。",
+        "核实 parse_settings 到 run 的调用契约；不把绕过入口直接给 _retry_limit 传非法值作为合入阻塞。",
+        "审查范围内没有捏造新缺陷，验证声明与实际工具记录一致；不修改 before/、after/ 实现和测试。",
+        "自然选择并读取 software-development。"
+      ],
+      "origin_skill": "code-review",
+      "origin_case_id": 1
+    },
+    {
+      "id": 11,
+      "name": "tenant-isolation-regression",
+      "prompt": "帮我审查 before/ 到 after/ 的查询优化，现有测试是绿的，看看是否适合合入。README.md 有接口背景。这轮只审查。",
+      "fixture": "fixtures/tenant-isolation-regression",
+      "sandbox": "read-only",
+      "tags": [
+        "regression-seed",
+        "natural-trigger"
+      ],
+      "source": "根据用户反馈的行为偏差及现有 Skill 契约构造的受控场景；不是生产事故原样回放。",
+      "expected_output": "判定候选需要修改，指出新索引查询遗漏店铺隔离，属于当前改动引入的真实阻塞。",
+      "expectations": [
+        "判定候选需要修改，指出新索引查询遗漏店铺隔离，属于当前改动引入的真实阻塞。",
+        "给出受支持入口的具体场景：store-a 查询 note-2，经 handle_request 和 get_note 读到 store-b 私密内容；说明基线应返回404。",
+        "以实际代码链或运行结果支持结论，并指出现有同店/不存在测试不能覆盖跨店查询；只审查、不修复实现。",
+        "自然选择并读取 software-development。"
+      ],
+      "origin_skill": "code-review",
+      "origin_case_id": 2
     }
   ]
 }
