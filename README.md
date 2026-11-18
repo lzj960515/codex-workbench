@@ -36,6 +36,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 `knowledge-maintenance` 承接原 `wiki-maintainer` 与 `source-repo-study`，安装器在更新时清理这两个旧托管链接；其他来源的同名内容沿用上述核对与保留方式。
 
+`writing-for-humans` 是原 `plain-writing` 的新名称，安装器在更新时同步切换仓库托管链接。
+
 公开仓库只保存适合公开、跨设备复用的内容。私人资料、机器专属绝对路径、密钥和内部项目知识保留在本机或对应项目中，不通过本仓库连接。
 
 也可以直接把仓库地址交给 AI，让它阅读本文件并完成安装和合并。
@@ -65,7 +67,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
-| [`plain-writing`](skills/plain-writing/) | 撰写和修改面向人的内容，按读者与用途组织信息，讲清事实、原因、结果和下一步。 |
+| [`writing-for-humans`](skills/writing-for-humans/) | 撰写和修改面向人的内容，按读者与用途组织信息，讲清事实、原因、结果和下一步。 |
 | [`knowledge-maintenance`](skills/knowledge-maintenance/) | 研究和持续维护有来源依据的知识，统一资料摄取、Wiki 修订、源码研究与独立变更记录。 |
 | [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
 | [`mindmap`](skills/mindmap/) | 将想法、文档和讨论整理成可编辑的 draw.io 思维导图。 |

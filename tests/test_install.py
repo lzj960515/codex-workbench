@@ -49,7 +49,12 @@ class InstallerTest(unittest.TestCase):
         shutil.copy2(INSTALLER, repository / "scripts" / "install.py")
         shutil.copy2(REPOSITORY_ROOT / "AGENTS.md", repository / "AGENTS.md")
         shutil.copytree(REPOSITORY_ROOT / "hooks", repository / "hooks")
-        for name in ("writing-for-ai", "software-development", "knowledge-maintenance"):
+        for name in (
+            "writing-for-ai",
+            "writing-for-humans",
+            "software-development",
+            "knowledge-maintenance",
+        ):
             skill_directory = repository / "skills" / name
             skill_directory.mkdir(parents=True)
             (skill_directory / "SKILL.md").write_text(
@@ -77,6 +82,7 @@ class InstallerTest(unittest.TestCase):
                         "verification-before-completion",
                         "wiki-maintainer",
                         "source-repo-study",
+                        "plain-writing",
                     )
                     for name in legacy_names:
                         (skills_directory / name).symlink_to(repository / "skills" / name)
@@ -93,6 +99,7 @@ class InstallerTest(unittest.TestCase):
 
                     for name in (
                         "writing-for-ai",
+                        "writing-for-humans",
                         "software-development",
                         "knowledge-maintenance",
                     ):

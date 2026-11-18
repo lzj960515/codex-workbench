@@ -1,0 +1,4 @@
+interface:
+  display_name: "面向人的写作"
+  short_description: "围绕读者与用途组织内容，用自然、具体的语言讲清事实、原因和下一步"
+  default_prompt: "请使用 $writing-for-humans，根据读者和用途，把这段内容写得清楚、具体、自然。"

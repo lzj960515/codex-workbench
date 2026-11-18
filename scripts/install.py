@@ -24,6 +24,7 @@ REPLACED_SKILL_NAMES = (
     "verification-before-completion",
     "wiki-maintainer",
     "source-repo-study",
+    "plain-writing",
 )
 IGNORED_NAMES = {".DS_Store", "__pycache__"}
 IGNORED_SUFFIXES = {".dtmp", ".pyc"}
