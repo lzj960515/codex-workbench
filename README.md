@@ -65,7 +65,7 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
-| [`plain-writing`](skills/plain-writing/) | 撰写面向人的回复、评论、Changelog 与说明，核实前提并讲清原因、结果和做法。 |
+| [`plain-writing`](skills/plain-writing/) | 撰写和修改面向人的内容，按读者与用途组织信息，讲清事实、原因、结果和下一步。 |
 | [`knowledge-maintenance`](skills/knowledge-maintenance/) | 研究和持续维护有来源依据的知识，统一资料摄取、Wiki 修订、源码研究与独立变更记录。 |
 | [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
 | [`mindmap`](skills/mindmap/) | 将想法、文档和讨论整理成可编辑的 draw.io 思维导图。 |
