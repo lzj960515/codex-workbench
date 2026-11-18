@@ -1,9 +1,9 @@
 {
-  "skill_name": "wiki-maintainer",
+  "skill_name": "knowledge-maintenance",
   "evals": [
     {
       "id": 1,
-      "prompt": "用 wiki-maintainer 把 sources/notes.md 整理成我们科普自媒体团队的 wiki，后面还会继续补充资料。直接创建文件。",
+      "prompt": "用 knowledge-maintenance 把 sources/notes.md 整理成我们科普自媒体团队的 wiki，后面还会继续补充资料。直接创建文件。",
       "fixture": "fixtures/media",
       "sandbox": "workspace-write",
       "expected_output": "有来源的自媒体知识页面、按用途建立的渐进导航、独立维护记录。",
@@ -17,7 +17,7 @@
     },
     {
       "id": 2,
-      "prompt": "用 wiki-maintainer 把 sources/units-update.md 的新确认更新到现有 docs 知识库，保持知识一致。",
+      "prompt": "用 knowledge-maintenance 把 sources/units-update.md 的新确认更新到现有 docs 知识库，保持知识一致。",
       "fixture": "fixtures/workspace",
       "sandbox": "workspace-write",
       "expected_output": "沿用共享标准归属，更新单位权威页面并新增独立记录；其余导航内容不变。",
@@ -31,7 +31,7 @@
     },
     {
       "id": 3,
-      "prompt": "用 wiki-maintainer 查一下我们统一的长度和温度单位是什么，给我现有文档依据。",
+      "prompt": "用 knowledge-maintenance 查一下我们统一的长度和温度单位是什么，给我现有文档依据。",
       "fixture": "fixtures/workspace",
       "sandbox": "workspace-write",
       "expected_output": "引用现有单位页面回答，无新知识，文件不变。",
@@ -43,7 +43,7 @@
     {
       "id": 4,
       "name": "engineering-lifecycle",
-      "prompt": "用 wiki-maintainer 根据 sources/review.md 更新投递服务文档，整理方案、决定和历史的阅读路径，让后来的开发者看清当前行为、已做和未做的部分，以及为什么放弃旧方案。直接修改文档。",
+      "prompt": "用 knowledge-maintenance 根据 sources/review.md 更新投递服务文档，整理方案、决定和历史的阅读路径，让后来的开发者看清当前行为、已做和未做的部分，以及为什么放弃旧方案。直接修改文档。",
       "fixture": "fixtures/engineering",
       "sandbox": "workspace-write",
       "source": "User requested integrating plans, decisions and archival into the existing Wiki workflow without replacing it.",

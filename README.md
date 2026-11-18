@@ -34,6 +34,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 
 更新后，安装器会清理已退出的本仓库托管链接：`writing-for-ai` 替代 `skill-builder`、`skill-creator`、`writing-for-agents`；`software-development` 替代 `architecture-design-review`、`maintainable-implementation`、`test-driven-development`、`code-review`；原 `verification-before-completion` 的有效方法归入通用证据原则与对应任务流程。旧名字若是独立目录、副本或指向其他来源的链接，安装会在写入前停止并保留内容；先核对并自行迁走这些旧内容，再重新安装。`--skills-mode skip` 保留全部现有 Skill。
 
+`knowledge-maintenance` 承接原 `wiki-maintainer` 与 `source-repo-study`，安装器在更新时清理这两个旧托管链接；其他来源的同名内容沿用上述核对与保留方式。
+
 公开仓库只保存适合公开、跨设备复用的内容。私人资料、机器专属绝对路径、密钥和内部项目知识保留在本机或对应项目中，不通过本仓库连接。
 
 也可以直接把仓库地址交给 AI，让它阅读本文件并完成安装和合并。
@@ -63,8 +65,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/) | 从变更热点和设计摩擦中寻找重构机会，给出证据、优先建议及改前改后对比。 |
 | [`systematic-debugging`](skills/systematic-debugging/) | 调查 Bug、偶发失败、状态不一致、性能退化和生产异常。 |
 | [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
-| [`source-repo-study`](skills/source-repo-study/) | 系统研究源码仓库，并整理成架构、功能和数据流 Wiki。 |
-| [`wiki-maintainer`](skills/wiki-maintainer/) | 持续摄取和修订 Markdown Wiki，维护索引、链接和知识一致性。 |
+| [`plain-writing`](skills/plain-writing/) | 撰写面向人的回复、评论、Changelog 与说明，核实前提并讲清原因、结果和做法。 |
+| [`knowledge-maintenance`](skills/knowledge-maintenance/) | 研究和持续维护有来源依据的知识，统一资料摄取、Wiki 修订、源码研究与独立变更记录。 |
 | [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
 | [`mindmap`](skills/mindmap/) | 将想法、文档和讨论整理成可编辑的 draw.io 思维导图。 |
 
@@ -73,6 +75,8 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 `writing-for-ai` 整合原三个写作 Skill，保留已有的工程与评测工具；替换依据和验证边界见[采用记录](docs/changes/2026-11-04-writing-for-ai.md)。
 
 软件开发与异常调查分别由 `software-development` 和 `systematic-debugging` 承担。个人规则不重复维护 Skill 选用目录；收尾在对应任务中复用有效证据。相关调整见[调试与交付方法整理](docs/changes/2026-11-05-debugging-and-delivery.md)。
+
+知识维护统一由 `knowledge-maintenance` 承担，源码概览、机制讲解和演进研究按问题读取。目录采用逐层 `README.md` 与独立 `changes/`；采用范围见[知识维护整合记录](docs/changes/2026-11-05-knowledge-maintenance-ea0ad5b7.md)。
 
 ## Hooks 清单
 

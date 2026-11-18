@@ -22,6 +22,8 @@ REPLACED_SKILL_NAMES = (
     "test-driven-development",
     "code-review",
     "verification-before-completion",
+    "wiki-maintainer",
+    "source-repo-study",
 )
 IGNORED_NAMES = {".DS_Store", "__pycache__"}
 IGNORED_SUFFIXES = {".dtmp", ".pyc"}

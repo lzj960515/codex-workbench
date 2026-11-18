@@ -1,0 +1,4 @@
+interface:
+  display_name: "把话说清楚"
+  short_description: "先独立判断，再用正向表达讲清原因、结果和做法，精简回复与说明"
+  default_prompt: "请使用 $plain-writing，把这段内容写得简短、具体，并讲清原因和结果。"

@@ -1,4 +1,5 @@
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -23,31 +24,15 @@ class SkillContractTest(unittest.TestCase):
                 self.assertNotIn("allowed-tools:", frontmatter)
                 self.assertNotIn("when_to_use:", frontmatter)
 
-    def test_source_repo_study_preserves_analysis_and_teaching_contracts(self) -> None:
-        package = read_skill_package("source-repo-study")
-        required_contracts = (
-            "Maintenance layer",
-            "Map Mode",
-            "Study Mode",
-            "Evolution Mode",
-            "architecture overview",
-            "feature inventory",
-            "runtime artifacts",
-            "confirmed behavior",
-            "index.md",
-            "log.md",
-            "simple workable model",
-            "breaking constraint",
-            "technical terms after their meaning",
-            "rhetorical questions",
-            "<br/>",
-            "code as supporting evidence",
-            "Match the user's language",
-        )
-
-        for contract in required_contracts:
-            with self.subTest(contract=contract):
-                self.assertIn(contract, package)
+    def test_knowledge_maintenance_is_the_documented_knowledge_entrypoint(self) -> None:
+        skill = SKILLS_ROOT / "knowledge-maintenance"
+        self.assertTrue((skill / "SKILL.md").is_file())
+        readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("[`knowledge-maintenance`](skills/knowledge-maintenance/)", readme)
+        for retired in ("wiki-maintainer", "source-repo-study"):
+            with self.subTest(retired=retired):
+                self.assertFalse((SKILLS_ROOT / retired).exists())
+                self.assertNotIn(f"[`{retired}`](skills/{retired}/)", readme)
 
     def test_software_development_preserves_risk_based_verification_contracts(self) -> None:
         package = read_skill_package("software-development")
@@ -156,29 +141,22 @@ class SkillContractTest(unittest.TestCase):
         self.assertIn("[`software-development`](skills/software-development/)", readme)
         self.assertNotIn("receiving-code-review", readme)
 
-    def test_wiki_maintainer_preserves_persistent_knowledge_contracts(self) -> None:
-        package = read_skill_package("wiki-maintainer")
-        required_contracts = (
-            "原始材料",
-            "Wiki 页面",
-            "维护规则",
-            "摄取来源",
-            "回答并沉淀问题",
-            "修订结论",
-            "健康检查",
-            "README.md",
-            "changes/",
-            "权威页面",
-            "可追溯来源",
-            "综合判断",
-            "争议结论",
-            "孤立页面",
-            "规模演进",
-        )
+    def test_knowledge_maintenance_preserves_references_and_regression_inputs(self) -> None:
+        skill = SKILLS_ROOT / "knowledge-maintenance"
+        main = (skill / "SKILL.md").read_text(encoding="utf-8")
+        for target in re.findall(r"\]\((references/[^)]+)\)", main):
+            with self.subTest(reference=target):
+                self.assertTrue((skill / target).is_file())
 
-        for contract in required_contracts:
-            with self.subTest(contract=contract):
-                self.assertIn(contract, package)
+        cases = json.loads((skill / "evals" / "evals.json").read_text(encoding="utf-8"))
+        self.assertEqual("knowledge-maintenance", cases["skill_name"])
+        self.assertEqual([1, 2, 3, 4], [case["id"] for case in cases["evals"]])
+        for case in cases["evals"]:
+            with self.subTest(case=case["id"]):
+                self.assertIn("knowledge-maintenance", case["prompt"])
+                fixture = skill / "evals" / case["fixture"]
+                self.assertTrue(fixture.is_dir())
+                self.assertTrue(any(fixture.rglob("*.md")))
 
 
 if __name__ == "__main__":

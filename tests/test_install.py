@@ -49,7 +49,7 @@ class InstallerTest(unittest.TestCase):
         shutil.copy2(INSTALLER, repository / "scripts" / "install.py")
         shutil.copy2(REPOSITORY_ROOT / "AGENTS.md", repository / "AGENTS.md")
         shutil.copytree(REPOSITORY_ROOT / "hooks", repository / "hooks")
-        for name in ("writing-for-ai", "software-development"):
+        for name in ("writing-for-ai", "software-development", "knowledge-maintenance"):
             skill_directory = repository / "skills" / name
             skill_directory.mkdir(parents=True)
             (skill_directory / "SKILL.md").write_text(
@@ -75,6 +75,8 @@ class InstallerTest(unittest.TestCase):
                         "test-driven-development",
                         "code-review",
                         "verification-before-completion",
+                        "wiki-maintainer",
+                        "source-repo-study",
                     )
                     for name in legacy_names:
                         (skills_directory / name).symlink_to(repository / "skills" / name)
@@ -89,7 +91,11 @@ class InstallerTest(unittest.TestCase):
                         installer=repository / "scripts" / "install.py",
                     )
 
-                    for name in ("writing-for-ai", "software-development"):
+                    for name in (
+                        "writing-for-ai",
+                        "software-development",
+                        "knowledge-maintenance",
+                    ):
                         installed = skills_directory / name
                         self.assertTrue((installed / "SKILL.md").is_file())
                         self.assertEqual(skills_mode == "link", installed.is_symlink())
@@ -311,7 +317,7 @@ class InstallerTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as directory:
                     root = Path(directory)
                     codex_home, skills_directory = self.make_installation_paths(root)
-                    conflicting = skills_directory / "wiki-maintainer"
+                    conflicting = skills_directory / "deep-discussion"
                     conflicting.mkdir(parents=True)
                     (conflicting / "SKILL.md").write_text(
                         "# Local work that must be preserved\n",
@@ -326,7 +332,7 @@ class InstallerTest(unittest.TestCase):
                     )
 
                     self.assertNotEqual(0, result.returncode)
-                    self.assertIn("wiki-maintainer", result.stderr)
+                    self.assertIn("deep-discussion", result.stderr)
                     self.assertEqual(
                         "# Local work that must be preserved\n",
                         (conflicting / "SKILL.md").read_text(encoding="utf-8"),
