@@ -1,0 +1,4 @@
+interface:
+  display_name: "图解"
+  short_description: "用可编辑的业务流程图、架构图与思维导图讲清条件、边界、原因和层级"
+  default_prompt: "请使用 $diagramming，将这些材料整理成清楚、准确且可编辑的图，并按阅读用途交付。"

@@ -54,6 +54,7 @@ class InstallerTest(unittest.TestCase):
             "writing-for-humans",
             "software-development",
             "knowledge-maintenance",
+            "diagramming",
         ):
             skill_directory = repository / "skills" / name
             skill_directory.mkdir(parents=True)
@@ -83,6 +84,8 @@ class InstallerTest(unittest.TestCase):
                         "wiki-maintainer",
                         "source-repo-study",
                         "plain-writing",
+                        "drawio",
+                        "mindmap",
                     )
                     for name in legacy_names:
                         (skills_directory / name).symlink_to(repository / "skills" / name)
@@ -102,6 +105,7 @@ class InstallerTest(unittest.TestCase):
                         "writing-for-humans",
                         "software-development",
                         "knowledge-maintenance",
+                        "diagramming",
                     ):
                         installed = skills_directory / name
                         self.assertTrue((installed / "SKILL.md").is_file())

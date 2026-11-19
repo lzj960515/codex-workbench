@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -18,11 +17,7 @@ def skill_dir() -> Path:
 
 
 def drawio_skill_dir() -> Path:
-    configured = os.environ.get("DRAWIO_SKILL_DIR")
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return skill_dir().parent / "drawio"
-
+    return Path(__file__).resolve().parents[1]
 
 def run_json(command: list[str], operation: str) -> dict[str, Any]:
     completed = subprocess.run(

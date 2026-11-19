@@ -69,10 +69,9 @@ python3 scripts/install.py --skills-mode copy --agents-mode copy
 | [`writing-for-ai`](skills/writing-for-ai/) | 编写和组织面向 AI 的 Skill、规则、提示词与知识文档，统一内容设计、写作、封装与验证。 |
 | [`writing-for-humans`](skills/writing-for-humans/) | 撰写和修改面向人的内容，按读者与用途组织信息，讲清事实、原因、结果和下一步。 |
 | [`knowledge-maintenance`](skills/knowledge-maintenance/) | 研究和持续维护有来源依据的知识，统一资料摄取、Wiki 修订、源码研究与独立变更记录。 |
-| [`drawio`](skills/drawio/) | 创建、修改、检查 draw.io 架构图和流程图，并导出 PNG。 |
-| [`mindmap`](skills/mindmap/) | 将想法、文档和讨论整理成可编辑的 draw.io 思维导图。 |
+| [`diagramming`](skills/diagramming/) | 创建和维护业务流程图、架构图与思维导图，讲清条件、路径、边界和业务理由，按阅读用途交付可编辑源图或图片。 |
 
-`drawio` 和 `mindmap` 需要安装 draw.io Desktop，并让 `drawio` 命令可以从终端调用。
+`diagramming` 统一原 `drawio` 与 `mindmap`；共用的图型选择、来源、制作与交付方法集中维护，业务图与脑图设计按需读取。读取、生成和结构检查使用包内脚本；PNG 导出需要 draw.io Desktop，原生显示检查使用当前环境的界面工具。安装器更新时将两个旧托管链接切换到新入口。采用依据见[图解能力整合记录](docs/changes/2026-11-19-diagramming-215b3d9e.md)。
 
 `writing-for-ai` 整合原三个写作 Skill，保留已有的工程与评测工具；替换依据和验证边界见[采用记录](docs/changes/2026-11-04-writing-for-ai.md)。
 

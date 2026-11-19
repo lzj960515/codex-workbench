@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -13,11 +12,7 @@ from typing import Any
 
 
 def drawio_skill_dir() -> Path:
-    configured = os.environ.get("DRAWIO_SKILL_DIR")
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return Path(__file__).resolve().parents[2] / "drawio"
-
+    return Path(__file__).resolve().parents[1]
 
 def inspect_diagram(source: Path) -> dict[str, Any]:
     inspector = drawio_skill_dir() / "scripts" / "inspect_diagram.py"
